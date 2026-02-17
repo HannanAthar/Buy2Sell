@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta
+      http-equiv="Referrer-Policy"
+      content="strict-origin-when-cross-origin"
+    />
+    <meta
+      http-equiv="Permissions-Policy"
+      content="camera=(), microphone=(), geolocation=()"
+    />
+    <title>Buy2Sell - Premium Reselling Platform</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://js.stripe.com; 
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; 
+        font-src 'self' https://fonts.gstatic.com https://unpkg.com; 
+        img-src 'self' data: https: http: blob:; 
+        connect-src 'self' https://api.stripe.com http://localhost:5000 https://generativelanguage.googleapis.com ws://localhost:5173 http://localhost:5173 ws://localhost:5174 http://localhost:5174; 
+        frame-src 'self' https://js.stripe.com;
+      "
+    />
+  </head>
+
+  <body class="antialiased text-slate-900 bg-slate-50">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

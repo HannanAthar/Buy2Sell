@@ -1,0 +1,243 @@
+@import "./Animations.css";
+@import "./components/SearchAnimation.css";
+@import "./components/GlobalProgressBar.css";
+
+@import "tailwindcss";
+
+/* ============================================
+   THEME CSS VARIABLES (Task 5)
+   ============================================ */
+:root {
+  --primary-green: #10b981;
+  --dark-green: #059669;
+  --accent-blue: #1e40af;
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+}
+
+/* ============================================
+   MOBILE/TOUCH DEVICE OVERRIDES (Task 2)
+   ============================================ */
+
+/* Mobile: 3-column grid for Discover section */
+@media (max-width: 768px) {
+  .discover-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .flip-card {
+    height: 200px !important;
+  }
+
+  .flip-card-inner {
+    transition-duration: 0.4s !important;
+  }
+}
+
+/* Touch devices: Replace hover with click/active */
+@media (hover: none) and (pointer: coarse) {
+  .flip-card-inner {
+    transition: transform 0.3s ease !important;
+  }
+
+  .flip-card:hover .flip-card-inner {
+    transform: none !important;
+  }
+
+  .flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg) !important;
+  }
+
+  .card:hover,
+  .product-card:hover {
+    transform: none !important;
+  }
+
+  .card:active,
+  .product-card:active {
+    transform: scale(0.98) !important;
+  }
+}
+
+/* GPU Acceleration utility (Task 8) */
+.gpu-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@layer base {
+  body {
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+      "Helvetica Neue", sans-serif;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Hover bloom effect */
+/* White bloom hover - NO TRANSITION LAG */
+/* Cursor Rules - STRICT CONTROL */
+.hero-section {
+  cursor: default !important;
+}
+
+.hero-section * {
+  cursor: default !important;
+}
+
+.hero-section button,
+.hero-section a {
+  cursor: pointer !important;
+}
+
+/* Hover effect - LARGE & SOFT (450px) - Shared Class */
+.hover-layer,
+.hover-section .hover-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.12) 15%,
+    transparent 45%
+  );
+  opacity: var(--opacity, 0);
+  pointer-events: none; /* PURE VISUAL - NO EVENTS */
+  z-index: 2;
+  mix-blend-mode: screen;
+  filter: blur(2px) opacity(0.9);
+  transition: opacity 0.15s ease;
+}
+
+/* Universal Hover Wrapper Styles */
+.hover-section {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.hover-section .section-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hover-section .section-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hover-section .section-content button,
+.hover-section .section-content a {
+  cursor: pointer;
+}
+
+/* Text Layer - Normal behavior */
+.text-layer {
+  position: relative;
+  z-index: 3;
+  /* pointer-events: none; REMOVED per user request */
+  /* cursor: text; REMOVED - inherited from .hero-section */
+}
+
+/* Buttons remain clickable */
+.text-layer button,
+.text-layer a {
+  cursor: pointer !important;
+  pointer-events: auto;
+}
+
+/* Tablet - smaller bloom */
+@media (max-width: 1024px) {
+  .hover-layer {
+    background: radial-gradient(
+      200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.1) 10%,
+      transparent 40%
+    );
+  }
+}
+
+/* Mobile - disable */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  .hover-layer,
+  .hover-section .hover-effect,
+  .section-hover-effect {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .hover-layer {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* EMERGENCY FIX - Force hover on Designer CTA */
+.designer-cta.hover-section {
+  position: relative !important;
+  overflow: hidden !important;
+  cursor: default !important;
+}
+
+.designer-cta .section-hover-effect {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.1) 15%,
+    transparent 40%
+  ) !important;
+  opacity: var(--opacity, 0) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  mix-blend-mode: screen !important;
+  filter: blur(2px) !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.designer-cta .cta-content {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.designer-cta button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}

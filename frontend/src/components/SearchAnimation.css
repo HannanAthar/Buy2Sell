@@ -1,0 +1,128 @@
+/* Advanced Glowing Search Animation */
+
+/* --- Main Wrapper --- */
+.search-wrapper {
+  position: relative;
+  /* Retain width/height from Tailwind classes in usage, or set defaults here if needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Keeps the light inside the border shape */
+  isolation: isolate;
+  border-radius: 9999px; /* rounded-full */
+}
+
+/* --- The Rotating Lights (Gradient) --- */
+.search-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 200%; /* Big enough to cover rotation */
+  height: 200%; /* Big enough to cover rotation */
+  top: -50%;
+  left: -50%;
+
+  /* Green (#10B981) and Blue (#1E40AF) adaptation */
+  background-image: conic-gradient(
+    transparent 0deg,
+    transparent 80deg,
+    #10b981 100deg,
+    /* Light 1: Green */ transparent 120deg,
+    transparent 260deg,
+    #1e40af 280deg,
+    /* Light 2: Blue */ transparent 300deg,
+    transparent 360deg
+  );
+  /* Animation timing is crucial here */
+  animation: complex-spin 5s linear infinite;
+  z-index: 0;
+}
+
+/* --- Inner Box (To make it look like a border) --- */
+/* This class should apply to the inner container that holds the input */
+.search-box {
+  position: relative;
+  /* width/height will be handled by parent flex/padding or Tailwind */
+  width: calc(100% - 4px); /* Create the border gap */
+  height: calc(100% - 4px); /* Create the border gap */
+  background: white; /* Or matching header background */
+  border-radius: 9999px; /* rounded-full */
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+/* --- The Physics Animation (Keyframes) --- */
+@keyframes complex-spin {
+  /* START (Corner 1)
+     0% - 15%: Slow movement at the start
+  */
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(40deg);
+  }
+
+  /* FAST MOVE (Top/Bottom edges)
+     15% - 40%: Zips across the long side very fast
+  */
+  40% {
+    transform: rotate(160deg);
+  }
+
+  /* REVERSE / BOUNCE (Corner 2)
+     40% - 60%: Reaches corner, goes back, then forward
+  */
+  45% {
+    transform: rotate(185deg);
+  } /* Overshoot slightly */
+  55% {
+    transform: rotate(170deg);
+  } /* Go BACK (Reverse) */
+  60% {
+    transform: rotate(190deg);
+  } /* Start moving forward again */
+
+  /* FAST MOVE (Return Journey)
+     60% - 85%: Zips back across the other side
+  */
+  85% {
+    transform: rotate(320deg);
+  }
+
+  /* SLOW END (Merging back to start)
+     85% - 100%: Slows down to join 0deg smoothly
+  */
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Glowing Blur Effect behind everything */
+.glow-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  background: linear-gradient(45deg, #10b981, #1e40af);
+  filter: blur(15px);
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* Reduce blur/effects on mobile for performance if needed */
+@media (max-width: 640px) {
+  .glow-effect {
+    opacity: 0.1;
+    filter: blur(10px);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .search-wrapper::before {
+    animation: none;
+  }
+}

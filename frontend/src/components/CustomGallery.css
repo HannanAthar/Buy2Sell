@@ -1,0 +1,198 @@
+/* Custom Gallery Styles */
+.gallery-container {
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  width: 100%;
+}
+
+/* Issue #1 Fix: Text container should not block card hover */
+.gallery-text-overlay {
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gallery-text-overlay button,
+.gallery-text-overlay a {
+  pointer-events: auto;
+}
+
+/* Remove white hover/click effects on mobile/tablet for ALL elements */
+.gallery-text-overlay,
+.gallery-text-overlay *,
+.gallery-text-overlay h1,
+.gallery-text-overlay h2,
+.gallery-text-overlay p,
+.gallery-text-overlay span,
+.gallery-text-overlay div {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  user-select: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+}
+
+.gallery-text-overlay:active,
+.gallery-text-overlay:focus,
+.gallery-text-overlay:hover,
+.gallery-text-overlay *:active,
+.gallery-text-overlay *:focus,
+.gallery-text-overlay *:hover {
+  -webkit-tap-highlight-color: transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.gallery-card {
+  position: relative;
+  width: 180px;
+  height: 320px;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --ty: 0px;
+  transform: translateY(var(--ty));
+  transition: width 350ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 350ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 250ms ease,
+    opacity 250ms ease, box-shadow 250ms ease;
+  animation: slideUp 400ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-row .gallery-card:nth-child(odd) {
+  --ty: -25px;
+}
+.card-row .gallery-card:nth-child(even) {
+  --ty: 25px;
+}
+
+.gallery-card:nth-child(1) { animation-delay: 100ms; }
+.gallery-card:nth-child(2) { animation-delay: 200ms; }
+.gallery-card:nth-child(3) { animation-delay: 300ms; }
+.gallery-card:nth-child(4) { animation-delay: 400ms; }
+.gallery-card:nth-child(5) { animation-delay: 500ms; }
+
+@media (min-width: 769px) {
+  .gallery-card:hover {
+    width: 280px;
+    height: 320px;
+    --ty: 0px;
+    z-index: 10;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  }
+  .card-row:has(.gallery-card:hover) .gallery-card:not(:hover) {
+    filter: grayscale(100%);
+    opacity: 0.6;
+    width: 180px;
+    transform: translateY(var(--ty));
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100px); }
+  to { opacity: 1; transform: translateY(var(--ty)); }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .card-row { gap: 0.8rem; }
+  .gallery-card { width: 140px; height: 280px; }
+  .gallery-card:hover { width: 180px; height: 280px; }
+}
+
+@media (max-width: 768px) {
+  .gallery-container {
+    display: flex !important;
+    opacity: 1 !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 15px 0;
+    pointer-events: auto !important;
+  }
+  .card-row {
+    display: flex !important;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding: 10px 15px;
+    gap: 12px;
+    width: max-content;
+    min-width: 100%;
+  }
+  .gallery-card {
+    flex: 0 0 auto;
+    width: 120px !important;
+    height: 200px !important;
+    --ty: 0px !important;
+    transform: none !important;
+    animation-name: slideUpMobile;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+    opacity: 0;
+  }
+  .gallery-card:hover,
+  .gallery-card:focus,
+  .gallery-card:active {
+    width: 120px !important;
+    height: 200px !important;
+    filter: none;
+    opacity: 1;
+  }
+  .card-row:has(.gallery-card:hover) .gallery-card:not(:hover) {
+    filter: none;
+    opacity: 1;
+    transform: none;
+    width: 120px !important;
+  }
+  .gallery-text-overlay {
+    pointer-events: none;
+  }
+  .gallery-text-overlay h1,
+  .gallery-text-overlay p,
+  .gallery-text-overlay button,
+  .gallery-text-overlay a,
+  .gallery-text-overlay span,
+  .gallery-text-overlay div {
+    pointer-events: auto;
+  }
+}
+
+@keyframes slideUpMobile {
+  from { opacity: 0; transform: translateY(100px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .gallery-container {
+    display: flex !important;
+    opacity: 1 !important;
+  }
+  .gallery-card {
+    width: 140px !important;
+    height: 250px !important;
+  }
+  .gallery-card:hover,
+  .gallery-card:focus {
+    width: 180px !important;
+    height: 250px !important;
+  }
+}
