@@ -8,7 +8,7 @@ import { readStorage, writeStorage } from "../utils/storage";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import DesignerCard from "./DesignerCard.jsx";
-import Buy2SellChatbot from "./Buy2SellChatbot.jsx";
+
 import { useAuthCheck } from "../hooks/useAuthCheck";
 import HoverWrapper from "./common/HoverWrapper.jsx";
 
@@ -367,7 +367,7 @@ export default function DesignerPage() {
           </div>
         </HoverWrapper>
       </section>
-      <Buy2SellChatbot />
+
       <br />
       <Footer />
     </div>

@@ -268,8 +268,7 @@ export default function AdminAnalytics() {
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {[
                         { label: "Buyers", value: stats?.buyers || 0, icon: Users, color: "from-blue-500 to-blue-600" },
-                        { label: "Designers", value: stats?.designers || 0, icon: Shirt, color: "from-purple-500 to-purple-600" },
-                        { label: "Resellers", value: stats?.resellers || 0, icon: Briefcase, color: "from-orange-500 to-orange-600" },
+
                         { label: "Products", value: stats?.products || 0, icon: Package, color: "from-emerald-500 to-emerald-600" },
                     ].map(({ label, value, icon: Icon, color }) => ( // eslint-disable-line no-unused-vars
                     <div key={label} className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all">

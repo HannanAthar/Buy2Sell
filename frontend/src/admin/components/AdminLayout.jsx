@@ -27,8 +27,7 @@ export default function AdminLayout() {
   const nav = [
     { to: "/admin/dashboard", icon: LayoutGrid, label: "Dashboard" },
     { to: "/admin/users", icon: Users, label: "Users" },
-    { to: "/admin/designers", icon: Shirt, label: "Designers" },
-    { to: "/admin/resellers", icon: Briefcase, label: "Resellers" },
+
     { to: "/admin/products", icon: PackageSearch, label: "Products" },
     { to: "/admin/custom-products", icon: Palette, label: "Custom Products" },
     { to: "/admin/orders", icon: ShoppingBag, label: "Orders" },

@@ -7,8 +7,7 @@ import RequireAdmin from "./admin/components/RequireAdmin";
 // Static imports to ensure reliability
 import AdminDashboard from "./admin/components/AdminDashboard";
 import AdminUserManagement from "./admin/components/AdminUserManagement";
-import AdminDesignerManagement from "./admin/components/AdminDesignerManagement";
-import AdminResellerManagement from "./admin/components/AdminResellerManagement";
+
 import AdminProductManagement from "./admin/components/AdminProductManagement";
 import AdminCustomProducts from "./admin/components/AdminCustomProducts";
 import AdminCustomProductUpload from "./admin/components/AdminCustomProductUpload";
@@ -44,22 +43,7 @@ export default function AdminApp() {
             </RequireAdmin>
           }
         />
-        <Route
-          path="designers"
-          element={
-            <RequireAdmin>
-              <AdminDesignerManagement />
-            </RequireAdmin>
-          }
-        />
-        <Route
-          path="resellers"
-          element={
-            <RequireAdmin>
-              <AdminResellerManagement />
-            </RequireAdmin>
-          }
-        />
+
         <Route
           path="products"
           element={

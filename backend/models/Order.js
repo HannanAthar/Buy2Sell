@@ -15,7 +15,7 @@ const OrderItemSchema = new mongoose.Schema(
     lineTotal: { type: Number, required: true },
     sellerType: {
       type: String,
-      enum: ["designer", "reseller", "custom", "Store"],
+      enum: ["custom", "Store"],
       required: false,
     },
     sellerId: {
@@ -146,7 +146,7 @@ const OrderSchema = new mongoose.Schema(
       transfers: [
         {
           sellerId: mongoose.Schema.Types.ObjectId,
-          sellerType: String, // 'designer' | 'reseller'
+          sellerType: String, // 'custom' | 'Store'
           stripeAccountId: String,
           amount: Number, // cents
           currency: { type: String, default: "pkr" },

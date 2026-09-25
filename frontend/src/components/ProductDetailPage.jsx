@@ -20,8 +20,7 @@ import ReviewsList from "./ReviewsList";
 import CommentsToggle from "./CommentsToggle";
 import ReviewsModal from "./ReviewsModal";
 import RentalBadge from "./RentalBadge";
-import DesignerCard from "./DesignerCard";
-import ResellerCard from "./ResellerCard";
+
 import CustomStyleProductCard from "./CustomYourStyle/ProductCard";
 import CloudinaryImage from "./common/CloudinaryImage";
 import api from "../api/axios";
@@ -97,8 +96,6 @@ function ProductDetailPage() {
   const location = useLocation();
   const nav = useNavigate();
   const {
-    designerProducts = [],
-    resellerProducts = [],
     customProducts = [],
     loading: contextLoading,
   } = useProducts();
@@ -120,9 +117,8 @@ function ProductDetailPage() {
     if (fetchedProduct) return fetchedProduct; // Use directly fetched product
     if (!paramId) return null;
 
-    // Search context
-    const all = [...designerProducts, ...resellerProducts];
-    const found = all.find((p) => String(p.id || p._id) === String(paramId));
+    // Search context (custom products only)
+    const found = customProducts.find((p) => String(p.id || p._id) === String(paramId));
     if (found) return found;
 
     // Fallback: LocalStorage "product:ID" cache (from Dashboard click)
@@ -150,8 +146,7 @@ function ProductDetailPage() {
     stateProduct,
     fetchedProduct,
     paramId,
-    designerProducts,
-    resellerProducts,
+    customProducts,
   ]);
 
   // Effect to fetch product if not found in context/storage
@@ -299,58 +294,17 @@ function ProductDetailPage() {
   const related = useMemo(() => {
     if (!product) return [];
     const pid = product.id || product._id;
-    const category = String(
-      product.category ||
-        product.type ||
-        product.productType ||
-        product.mainCategory ||
-        ""
-    ).toLowerCase();
-    const brandName = String(
-      product.sellerName ||
-        product.brandName ||
-        product.designerName ||
-        product.resellerName ||
-        product.shopName ||
-        ""
-    ).toLowerCase();
 
-    const all = [...designerProducts, ...resellerProducts, ...customProducts];
-    const results = all
-      .filter((p) => (p.id || p._id) !== pid)
-      .filter((p) => {
-        const pc = String(
-          p.category || p.type || p.productType || p.mainCategory || ""
-        ).toLowerCase();
-        const pb = String(
-          p.sellerName ||
-            p.brandName ||
-            p.designerName ||
-            p.resellerName ||
-            p.shopName ||
-            ""
-        ).toLowerCase();
-        // Custom Product Logic: STRICTLY show only other custom/store items
-        const isCurrentCustom =
-          product.isCustom === true || product.source === "custom-shirt";
-
-        if (isCurrentCustom) {
-          return (
-            p.isCustom === true ||
-            p.source === "custom-shirt" ||
-            p.sellerType === "Store" ||
-            p.productType === "custom-style"
-          );
-        }
-
-        if (category && pc.includes(category)) return true;
-        if (brandName && pb.includes(brandName)) return true;
-
-        return !category && !brandName;
-      });
-
-    return results.slice(0, 10);
-  }, [product, designerProducts, resellerProducts, customProducts]);
+    // STRICT: Only show custom clothing products (no legacy designer/reseller items)
+    const customOnly = Array.isArray(customProducts) ? customProducts : [];
+    
+    // Grab all custom products except the current one
+    const otherProducts = customOnly.filter((p) => String(p.id || p._id) !== String(pid));
+    
+    // Sort randomly and pick 4
+    const shuffled = [...otherProducts].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4);
+  }, [product, customProducts]);
   // --- HOISTED HOOKS END ---
 
   // Show loader while context or direct fetch is loading
@@ -396,19 +350,13 @@ function ProductDetailPage() {
   const isCustomDesign =
     product.isCustom === true || product.source === "custom-shirt";
 
-  const isDesignerProduct =
-    !isCustomDesign &&
-    designerProducts.some((p) => String(p.id || p._id) === String(pid));
-  const isResellerProduct =
-    !isCustomDesign && resellerProducts.some((p) => (p.id || p._id) === pid);
-
+  // All products on this platform are admin/custom clothing products
   const role = isCustomDesign
     ? "Custom"
-    : isDesignerProduct
-    ? "Designer"
-    : isResellerProduct
-    ? "Reseller"
-    : "Seller";
+    : product.sellerType === "Admin"
+    ? "Admin"
+    : "Custom Studio";
+
 
   const images = (() => {
     if (Array.isArray(product.imageUrls) && product.imageUrls.length)
@@ -681,16 +629,12 @@ function ProductDetailPage() {
         0
     ),
 
-    // quantity (respect stock, reseller forced to 1)
-    quantity: isResellerProduct ? 1 : clampToStock(qty),
+    // quantity (all products allow quantity selection)
+    quantity: clampToStock(qty),
 
     // NEW: persist seller type + stock for cart logic
     sellerId: product.sellerId || product.ownerId || product.userId,
-    sellerType: isResellerProduct
-      ? "Reseller"
-      : isDesignerProduct
-      ? "Designer"
-      : product.sellerType || role,
+    sellerType: product.sellerType || "Admin",
     stock: stockQty,
     stockQty,
 
@@ -719,7 +663,7 @@ function ProductDetailPage() {
       cart.push(item);
     } else {
       const current = num(exists.quantity || 1);
-      const next = clampToStock(current + (isResellerProduct ? 0 : qty));
+      const next = clampToStock(current + qty);
       exists.quantity = next;
     }
 
@@ -1067,27 +1011,9 @@ function ProductDetailPage() {
                 {brandName && (
                   <p className="text-sm text-gray-600">
                     by{" "}
-                    {isDesignerProduct ? (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          product.sellerId
-                            ? nav(`/designer-hub?sellerId=${product.sellerId}`)
-                            : nav(
-                                `/designer-hub?d=${encodeURIComponent(
-                                  brandName
-                                )}`
-                              )
-                        }
-                        className="font-medium text-emerald-700 hover:underline"
-                      >
-                        {brandName}
-                      </button>
-                    ) : (
-                      <span className="font-medium text-gray-700">
-                        {brandName}
-                      </span>
-                    )}
+                    <span className="font-medium text-gray-700">
+                      {brandName}
+                    </span>
                   </p>
                 )}
 
@@ -1231,8 +1157,8 @@ function ProductDetailPage() {
                   </motion.div>
                 )}
 
-                {!isResellerProduct && (
-                  <div>
+                {/* Quantity selector always shown for all products */}
+                <div>
                     <p className="text-sm font-medium text-gray-900 mb-1">
                       Quantity
                     </p>
@@ -1263,7 +1189,6 @@ function ProductDetailPage() {
                       </span>
                     )}
                   </div>
-                )}
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-gray-600 border-t border-gray-100 pt-3">
                   {fabric && (
@@ -1458,62 +1383,20 @@ function ProductDetailPage() {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              Explore more products
+              You May Also Like
             </motion.h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-items-center">
               {related.map((p, index) => {
                 const pId = p.id || p._id;
-                // Determine if designer or reseller
-                // We can check existence in lists or properties
-                // Fallback to checking properties if lists aren't exhaustive in context (e.g. search results)
-                const isDesigner = designerProducts.some(
-                  (dp) => String(dp.id || dp._id) === String(pId)
-                );
-                // If not explicitly designer, assume reseller for standard cards unless specific logic needed
-                // Or checking resellerProducts.
-                // Note: related is filtered from [...designerProducts, ...resellerProducts]
-
-
-                // Default to ResellerCard if unsure, or DesignerCard if isDesigner
-                // If both (unlikely), Designer takes precedence or vice versa?
-                // Let's use isDesigner check.
-                // Check if custom product
-                const isCustom = customProducts.some(
-                  (cp) => String(cp.id || cp._id) === String(pId)
-                );
-
-                if (isCustom) {
-                  // Adapt context product to CustomStyleProductCard expectation
-                  const customItem = {
-                    ...p,
-                    front:
-                      p.imageUrls?.[0] || p.image || p.customPreview || p.front,
-                    back: p.imageUrls?.[1] || p.back,
-                    price: p.sellingPrice || p.price,
-                    name: p.name || p.title,
-                  };
-                  return (
-                    <motion.div
-                      key={pId}
-                      className="w-full h-full"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.08 }}
-                      viewport={{ once: true }}
-                    >
-                      <CustomStyleProductCard
-                        item={customItem}
-                        isLiked={wishlist.some(
-                          (w) => String(w.id || w._id) === String(pId)
-                        )}
-                        onToggleWishlist={handleCardWishlistToggle}
-                      />
-                    </motion.div>
-                  );
-                }
-
-                const CardComponent = isDesigner ? DesignerCard : ResellerCard;
-
+                const customItem = {
+                  ...p,
+                  front:
+                    p.imageUrls?.[0] || p.image || p.customPreview || p.front,
+                  back: p.imageUrls?.[1] || p.back,
+                  price: p.sellingPrice || p.price,
+                  name: p.name || p.title,
+                };
+                
                 return (
                   <motion.div
                     key={pId}
@@ -1523,8 +1406,8 @@ function ProductDetailPage() {
                     transition={{ duration: 0.5, delay: index * 0.08 }}
                     viewport={{ once: true }}
                   >
-                    <CardComponent
-                      product={p}
+                    <CustomStyleProductCard
+                      item={customItem}
                       isLiked={wishlist.some(
                         (w) => String(w.id || w._id) === String(pId)
                       )}

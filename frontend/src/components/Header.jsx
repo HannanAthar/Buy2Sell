@@ -1,5 +1,6 @@
 // Header.jsx
 import { useState, useEffect, useRef } from "react";
+
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -18,7 +19,7 @@ import { readStorage, getStorageKey } from "../utils/storage";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); // NEW: Mobile search state
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
@@ -26,36 +27,9 @@ const Header = () => {
   const [wishlistBump, setWishlistBump] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-
-  // Categories
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [isCategoriesOpenMobile, setIsCategoriesOpenMobile] = useState(false);
-  const catRef = useRef(null);
   const userMenuRef = useRef(null);
-  const closeTimer = useRef(null);
 
-  // NEW: dropdown state for Designer & Pre-Loved
-  const [isDesignerMenuOpen, setIsDesignerMenuOpen] = useState(false);
-  const [isResellerMenuOpen, setIsResellerMenuOpen] = useState(false);
-  const designerRef = useRef(null);
-  const resellerRef = useRef(null);
 
-  // NEW: separate timers for smoother hover
-  const designerTimer = useRef(null);
-  const resellerTimer = useRef(null);
-
-  // NEW: State for mobile menu dropdows
-  const [mobileMenuState, setMobileMenuState] = useState({
-    designers: false,
-    resellers: false,
-  });
-
-  const toggleMobileSubmenu = (menu) => {
-    setMobileMenuState((prev) => ({
-      ...prev,
-      [menu]: !prev[menu],
-    }));
-  };
 
   const checkUser = () => {
     try {
@@ -191,78 +165,17 @@ const Header = () => {
     window.location.href = "/";
   };
 
-  // Close menus on outside click (user & categories & new dropdowns)
+  // Close user menu on outside click
   useEffect(() => {
     const onClickOutside = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
         setIsUserMenuOpen(false);
-      }
-      if (catRef.current && !catRef.current.contains(e.target)) {
-        setIsCategoriesOpen(false);
-      }
-      if (designerRef.current && !designerRef.current.contains(e.target)) {
-        setIsDesignerMenuOpen(false);
-      }
-      if (resellerRef.current && !resellerRef.current.contains(e.target)) {
-        setIsResellerMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  // ===== Categories hover logic (unchanged) =====
-  const openCats = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-    setIsCategoriesOpen(true);
-  };
-  const closeCatsWithDelay = () => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setIsCategoriesOpen(false), 120); // anti-flicker
-  };
-
-  const onCatKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setIsCategoriesOpen((v) => !v);
-    }
-    if (e.key === "Escape") setIsCategoriesOpen(false);
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setIsCategoriesOpen(true);
-    }
-  };
-
-  // ===== NEW: Designer hover logic with delay & bridge =====
-  const openDesigner = () => {
-    if (designerTimer.current) {
-      clearTimeout(designerTimer.current);
-      designerTimer.current = null;
-    }
-    setIsDesignerMenuOpen(true);
-  };
-
-  const closeDesignerWithDelay = () => {
-    if (designerTimer.current) clearTimeout(designerTimer.current);
-    designerTimer.current = setTimeout(() => setIsDesignerMenuOpen(false), 120);
-  };
-
-  // ===== NEW: Reseller hover logic with delay & bridge =====
-  const openReseller = () => {
-    if (resellerTimer.current) {
-      clearTimeout(resellerTimer.current);
-      resellerTimer.current = null;
-    }
-    setIsResellerMenuOpen(true);
-  };
-
-  const closeResellerWithDelay = () => {
-    if (resellerTimer.current) clearTimeout(resellerTimer.current);
-    resellerTimer.current = setTimeout(() => setIsResellerMenuOpen(false), 120);
-  };
 
   return (
     <header className="relative z-20 bg-white/95 backdrop-blur-md shadow-lg border-b border-green-100">
@@ -283,222 +196,52 @@ const Header = () => {
           </a>
 
           {/* Centered Menu (Desktop) - Tablet Fix: Whitespace nowrap & scroll if needed */}
-          <nav className="hidden lg:flex items-center space-x-6 mx-auto whitespace-nowrap">
-            {/* Designer Hub + dropdown */}
-            <div
-              className="relative flex items-center"
-              ref={designerRef}
-              onMouseEnter={openDesigner}
-              onMouseLeave={closeDesignerWithDelay}
-              onPointerEnter={openDesigner}
-              onPointerLeave={closeDesignerWithDelay}
+          <nav className="hidden lg:flex items-center space-x-8 mx-auto whitespace-nowrap px-4">
+            {/* About Us */}
+            <Link
+              to="/about-us"
+              className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
             >
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-              <Link
-                to="/designers"
-                className="h-10 px-4 flex items-center justify-center text-gray-700 hover:text-green-500 text-sm font-medium relative group gap-1 transition-all nav-link-animated"
-                aria-haspopup="true"
-                aria-expanded={isDesignerMenuOpen}
-              >
-                Designer Hub
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isDesignerMenuOpen ? "rotate-180" : ""
-                  }`}
-                />
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
-              </Link>
+              About Us
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
+            </Link>
 
-              {/* Invisible hover bridge to avoid gap */}
-              <div className="absolute left-0 right-0 top-full h-2" />
-
-              {/* Dropdown panel – only designer items */}
-              <div
-                className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50 transition-all duration-150 ${
-                  isDesignerMenuOpen
-                    ? "opacity-100 translate-y-1 pointer-events-auto"
-                    : "opacity-0 -translate-y-1 pointer-events-none"
-                }`}
-              >
-                <Link
-                  to="/clothes?seller=designer"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsDesignerMenuOpen(false)}
-                >
-                  Designer Clothes
-                </Link>
-                <Link
-                  to="/shoes?seller=designer"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsDesignerMenuOpen(false)}
-                >
-                  Designer Shoes
-                </Link>
-                <Link
-                  to="/bags?seller=designer"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsDesignerMenuOpen(false)}
-                >
-                  Designer Bags
-                </Link>
-              </div>
-
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-            </div>
-
-            {/* Pre-Loved Treasures (Reseller) + dropdown */}
-            <div
-              className="relative flex items-center"
-              ref={resellerRef}
-              onMouseEnter={openReseller}
-              onMouseLeave={closeResellerWithDelay}
-              onPointerEnter={openReseller}
-              onPointerLeave={closeResellerWithDelay}
+            {/* How It Works */}
+            <Link
+              to="/how-it-works"
+              className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
             >
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-              <Link
-                to="/reseller"
-                className="h-10 px-4 flex items-center justify-center text-gray-700 hover:text-green-500 text-sm font-medium relative group gap-1 transition-all nav-link-animated"
-                aria-haspopup="true"
-                aria-expanded={isResellerMenuOpen}
-              >
-                Pre-Loved Treasures
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isResellerMenuOpen ? "rotate-180" : ""
-                  }`}
-                />
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
-              </Link>
+              How It Works
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
+            </Link>
 
-              {/* Invisible hover bridge to avoid gap */}
-              <div className="absolute left-0 right-0 top-full h-2" />
-
-              <div
-                className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50 transition-all duration-150 ${
-                  isResellerMenuOpen
-                    ? "opacity-100 translate-y-1 pointer-events-auto"
-                    : "opacity-0 -translate-y-1 pointer-events-none"
-                }`}
-              >
-                <Link
-                  to="/clothes?seller=reseller"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsResellerMenuOpen(false)}
-                >
-                  Pre-loved Clothes
-                </Link>
-                <Link
-                  to="/shoes?seller=reseller"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsResellerMenuOpen(false)}
-                >
-                  Pre-loved Shoes
-                </Link>
-                <Link
-                  to="/bags?seller=reseller"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  onClick={() => setIsResellerMenuOpen(false)}
-                >
-                  Pre-loved Bags
-                </Link>
-              </div>
-
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-            </div>
-
-            {/* Custom Clothes */}
-            <div className="flex items-center">
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-              <Link
-                to="/custom-products"
-                className="h-10 px-4 flex items-center justify-center text-gray-700 hover:text-green-500 text-sm font-medium relative group gap-1 transition-all nav-link-animated"
-              >
-                <Shirt className="w-4 h-4" />
-                Custom Cloths
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
-              </Link>
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-            </div>
-
-            {/* ===== CATEGORIES (glitch-free) ===== */}
-            <div
-              className="relative flex items-center"
-              ref={catRef}
-              onMouseEnter={openCats}
-              onMouseLeave={closeCatsWithDelay}
-              onPointerEnter={openCats}
-              onPointerLeave={closeCatsWithDelay}
+            {/* Custom Clothes (Primary Action) */}
+            <Link
+              to="/designer-tool"
+              className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
             >
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
+              <Shirt className="w-5 h-5 mr-1.5 text-green-600" />
+              Customize Clothes
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all group-hover:w-full" />
+            </Link>
 
-              {/* Trigger */}
-              <button
-                type="button"
-                className="h-10 px-4 flex items-center justify-center text-gray-700 hover:text-green-500 text-sm font-medium relative group gap-1 transition-all nav-link-animated"
-                aria-haspopup="menu"
-                aria-expanded={isCategoriesOpen}
-                onClick={() => setIsCategoriesOpen((v) => !v)}
-                onKeyDown={onCatKeyDown}
-              >
-                Categories
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isCategoriesOpen ? "rotate-180" : ""
-                  }`}
-                />
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
-              </button>
-
-              {/* Invisible hover bridge */}
-              <div className="absolute left-0 right-0 top-full h-2" />
-
-              {/* Panel */}
-              <div
-                role="menu"
-                aria-label="Categories"
-                className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-52 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50 transition-all duration-150 ${
-                  isCategoriesOpen
-                    ? "opacity-100 translate-y-1 pointer-events-auto"
-                    : "opacity-0 -translate-y-1 pointer-events-none"
-                }`}
-              >
-                <a
-                  href="/clothes"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                  role="menuitem"
-                >
-                  Clothes
-                </a>
-                <a
-                  href="/bags"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                >
-                  Bags
-                </a>
-                <a
-                  href="/shoes"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50"
-                >
-                  Shoes
-                </a>
-              </div>
-
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-            </div>
+            {/* Gallery */}
+            <Link
+              to="/gallery"
+              className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
+            >
+              Gallery
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
+            </Link>
 
             {/* Contact */}
-            <div className="flex items-center">
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-              <a
-                href="/contact"
-                className="h-10 px-4 flex items-center justify-center text-gray-700 hover:text-green-500 text-sm font-medium relative group gap-1 transition-all nav-link-animated"
-              >
-                Contact Us
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
-              </a>
-              <span className="border-l border-gray-300 h-5 opacity-50"></span>
-            </div>
+            <Link
+              to="/contact"
+              className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
+            >
+              Contact Us
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all group-hover:w-full" />
+            </Link>
           </nav>
 
           {/* Right edge actions - Mobile Icon Fix: Flex nowrap and gap */}
@@ -735,151 +478,38 @@ const Header = () => {
               </div>
             )}
 
-            {/* Designer Hub Dropdown (Mobile) */}
-            <div className="border-b border-gray-50">
-              <div className="flex items-center justify-between w-full">
-                <Link
-                  to="/designer-hub"
-                  className="flex-grow px-3 py-3 rounded-l-md hover:bg-green-50 text-gray-700 text-base font-medium transition-colors"
-                >
-                  Designer Hub
-                </Link>
-                <button
-                  onClick={() => toggleMobileSubmenu("designers")}
-                  className="p-3 rounded-r-md hover:bg-green-100 text-gray-500 transition-colors"
-                  aria-label="Toggle Designer Hub menu"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      mobileMenuState.designers ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-              </div>
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  mobileMenuState.designers
-                    ? "max-h-48 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="pl-4 bg-gray-50/50 py-2 space-y-1">
-                  <a
-                    href="/clothes?seller=designer"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Designer Clothes
-                  </a>
-                  <a
-                    href="/shoes?seller=designer"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Designer Shoes
-                  </a>
-                  <a
-                    href="/bags?seller=designer"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Designer Bags
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Pre-Loved Dropdown (Mobile) */}
-            <div className="border-b border-gray-50">
-              <div className="flex items-center justify-between w-full">
-                <Link
-                  to="/reseller"
-                  className="flex-grow px-3 py-3 rounded-l-md hover:bg-green-50 text-gray-700 text-base font-medium transition-colors"
-                >
-                  Pre-Loved Treasures
-                </Link>
-                <button
-                  onClick={() => toggleMobileSubmenu("resellers")}
-                  className="p-3 rounded-r-md hover:bg-green-100 text-gray-500 transition-colors"
-                  aria-label="Toggle Pre-Loved Treasures menu"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      mobileMenuState.resellers ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-              </div>
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  mobileMenuState.resellers
-                    ? "max-h-48 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="pl-4 bg-gray-50/50 py-2 space-y-1">
-                  <a
-                    href="/clothes?seller=reseller"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Pre-loved Clothes
-                  </a>
-                  <a
-                    href="/shoes?seller=reseller"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Pre-loved Shoes
-                  </a>
-                  <a
-                    href="/bags?seller=reseller"
-                    className="block px-3 py-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 text-sm"
-                  >
-                    Pre-loved Bags
-                  </a>
-                </div>
-              </div>
-            </div>
-
+            {/* About Us */}
             <a
-              href="/custom-products"
-              className="px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 flex items-center gap-2 text-base font-medium"
+              href="/about-us"
+              className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base font-medium"
             >
-              <Shirt className="w-4 h-4" />
-              Custom Cloths
+              About Us
             </a>
 
-            {/* Mobile Categories accordion */}
-            <button
-              className="w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base font-medium"
-              onClick={() => setIsCategoriesOpenMobile((v) => !v)}
-              aria-expanded={isCategoriesOpenMobile}
+            {/* How It Works */}
+            <a
+              href="/how-it-works"
+              className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base font-medium"
             >
-              <span>Categories</span>
-              <ChevronDown
-                className={`w-4 h-4 transition-transform ${
-                  isCategoriesOpenMobile ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-            {isCategoriesOpenMobile && (
-              <div className="ml-3 pb-2 border-l-2 border-gray-100 pl-2">
-                <a
-                  href="/clothes"
-                  className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base"
-                >
-                  Clothes
-                </a>
-                <a
-                  href="/bags"
-                  className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base"
-                >
-                  Bags
-                </a>
-                <a
-                  href="/shoes"
-                  className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base"
-                >
-                  Shoes
-                </a>
-              </div>
-            )}
+              How It Works
+            </a>
+
+            {/* Customize Clothes */}
+            <a
+              href="/designer-tool"
+              className="px-3 py-3 rounded-md hover:bg-green-50 flex items-center gap-2 text-base font-medium bg-green-50/50 text-green-700"
+            >
+              <Shirt className="w-5 h-5" />
+              Customize Clothes
+            </a>
+
+            {/* Gallery */}
+            <a
+              href="/gallery"
+              className="block px-3 py-3 rounded-md hover:bg-green-50 text-gray-700 text-base font-medium"
+            >
+              Gallery
+            </a>
 
             <a
               href="/contact"

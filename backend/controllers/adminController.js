@@ -1,6 +1,4 @@
 import User from "../models/User.js";
-import Designer from "../models/Designer.js";
-import Reseller from "../models/Reseller.js";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import Review from "../models/Review.js";
@@ -15,10 +13,8 @@ import {
 /* ---------- DASHBOARD ---------- */
 export const getDashboardStats = async (req, res) => {
   try {
-    const [buyers, designers, resellers, products, orders] = await Promise.all([
+    const [buyers, products, orders] = await Promise.all([
       User.countDocuments({ role: "buyer" }),
-      Designer.countDocuments(),
-      Reseller.countDocuments(),
       Product.countDocuments(),
       Order.countDocuments(),
     ]);
@@ -32,8 +28,6 @@ export const getDashboardStats = async (req, res) => {
 
     res.json({
       buyers,
-      designers,
-      resellers,
       products,
       orders,
       rentProducts: totalRentProducts,
@@ -45,89 +39,16 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
-// ---------- DESIGNERS ----------
+// ---------- DESIGNERS (Legacy - returns empty, models removed) ----------
 export const getDesigners = async (req, res) => {
-  try {
-    const designers = await Designer.find().select(
-      "fullName email phone location address bio logo isVerified isActive createdAt brandName wardrobeName averageRating ratingCount totalReviews paymentMethod paymentDetails payoutStatus payoutRejectionReason"
-    ).lean();
-
-    const products = await Product.find({ sellerType: "Designer" }).select("sellerId sellerName").lean();
-
-    const counts = {};
-    const nameMap = {};
-
-    // Initialize counts and build Name->ID map (First user with name claims the name-lookup)
-    designers.forEach(d => {
-      const did = String(d._id);
-      counts[did] = 0;
-      [d.brandName, d.wardrobeName, d.fullName].filter(Boolean).forEach(n => {
-        if (!nameMap[n]) nameMap[n] = did;
-      });
-    });
-
-    // Assign products uniquely
-    products.forEach(p => {
-      const sId = String(p.sellerId);
-      if (counts[sId] !== undefined) {
-        counts[sId]++;
-      } else if (p.sellerName && nameMap[p.sellerName]) {
-        // Fallback: Match by name if ID match failed (Seed data)
-        counts[nameMap[p.sellerName]]++;
-      }
-    });
-
-    const formatted = designers.map((d) => ({
-      ...d,
-      totalProducts: counts[String(d._id)] || 0,
-    }));
-
-    res.json(formatted);
-  } catch (err) {
-    console.error("Designer fetch error:", err);
-    res.status(500).json({ message: "Designer fetch failed", error: err.message });
-  }
+  // Designer model has been removed as part of the platform pivot to Custom Clothing Studio.
+  res.json([]);
 };
 
-// ---------- RESELLERS ----------
+// ---------- RESELLERS (Legacy - returns empty, models removed) ----------
 export const getResellers = async (req, res) => {
-  try {
-    const resellers = await Reseller.find().select(
-      "fullName email phone location address bio logo paymentMethod paymentDetails payoutStatus payoutRejectionReason isActive createdAt averageRating ratingCount totalReviews"
-    ).lean();
-
-    const products = await Product.find({ sellerType: "Reseller" }).select("sellerId sellerName").lean();
-
-    const counts = {};
-    const nameMap = {};
-
-    resellers.forEach(r => {
-      const rid = String(r._id);
-      counts[rid] = 0;
-      if (r.fullName) {
-        if (!nameMap[r.fullName]) nameMap[r.fullName] = rid;
-      }
-    });
-
-    products.forEach(p => {
-      const sId = String(p.sellerId);
-      if (counts[sId] !== undefined) {
-        counts[sId]++;
-      } else if (p.sellerName && nameMap[p.sellerName]) {
-        counts[nameMap[p.sellerName]]++;
-      }
-    });
-
-    const formatted = resellers.map((r) => ({
-      ...r,
-      totalProducts: counts[String(r._id)] || 0,
-    }));
-
-    res.json(formatted);
-  } catch (err) {
-    console.error("Reseller fetch error:", err);
-    res.status(500).json({ message: "Reseller fetch failed", error: err.message });
-  }
+  // Reseller model has been removed as part of the platform pivot to Custom Clothing Studio.
+  res.json([]);
 };
 
 /* ---------- PRODUCTS ---------- */
@@ -244,38 +165,10 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// ---------- HELPER: BATCH FETCH SELLERS ----------
+// ---------- HELPER: BATCH FETCH SELLERS (Legacy stub - Designer/Reseller removed) ----------
 export const adminGetBatchedSellers = async (req, res) => {
-  try {
-    const { sellers } = req.body; // Array of { id, type }
-    if (!sellers || !Array.isArray(sellers) || sellers.length === 0) {
-      return res.json({});
-    }
-
-    // Deduplicate requested IDs
-    const designerIds = [...new Set(sellers.filter(s => s.type === 'Designer' || s.type === 'designer').map(s => s.id))];
-    const resellerIds = [...new Set(sellers.filter(s => s.type === 'Reseller' || s.type === 'reseller').map(s => s.id))];
-
-    const [designers, resellers] = await Promise.all([
-      Designer.find({ _id: { $in: designerIds } }).select("fullName email phone location address bio logo paymentMethod paymentDetails payoutStatus").lean(),
-      Reseller.find({ _id: { $in: resellerIds } }).select("fullName email phone location address bio logo paymentMethod paymentDetails payoutStatus").lean()
-    ]);
-
-    const result = {};
-
-    designers.forEach(d => {
-      result[String(d._id)] = { ...d, type: 'Designer' };
-    });
-
-    resellers.forEach(r => {
-      result[String(r._id)] = { ...r, type: 'Reseller' };
-    });
-
-    res.json(result);
-  } catch (err) {
-    console.error("Batch seller fetch error:", err);
-    res.status(500).json({ message: "Failed to fetch seller details", error: err.message });
-  }
+  // Designer and Reseller models have been removed. Returns empty result.
+  res.json({});
 };
 
 // ADMIN: Create product
@@ -433,179 +326,26 @@ export const adminToggleProductStatus = async (req, res) => {
   }
 };
 
-// ADMIN: Update designer
+// ---------- DESIGNER CRUD (Legacy stubs - model removed) ----------
 export const adminUpdateDesigner = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    // Get current state
-    const current = await Designer.findById(id);
-    if (!current) {
-      return res.status(404).json({ message: "Designer not found" });
-    }
-
-    const designer = await Designer.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    ).select("fullName email phone location address logo isActive createdAt brandName wardrobeName paymentDetail paymentDetails payoutStatus payoutRejectionReason paymentMethod");
-
-    // Sync products if fullName changed AND product was using fullName
-    if (updates.fullName && updates.fullName !== current.fullName) {
-      await Product.updateMany(
-        {
-          sellerType: "Designer",
-          $or: [
-            { sellerId: id, sellerName: current.fullName },
-            { sellerName: { $in: [current.fullName, updates.fullName] } }
-          ]
-        },
-        { sellerName: updates.fullName, sellerId: id }
-      );
-    }
-
-    res.json({ success: true, designer });
-  } catch (err) {
-    console.error("Admin update designer error:", err);
-    res.status(500).json({ message: "Update failed", error: err.message });
-  }
+  res.status(410).json({ message: "Designer management has been removed from this platform." });
 };
-
-// ADMIN: Activate / deactivate designer
 export const adminToggleDesignerStatus = async (req, res) => {
-  try {
-    const { isActive } = req.body;
-
-    const designer = await Designer.findByIdAndUpdate(
-      req.params.id,
-      { isActive },
-      { new: true, runValidators: true }
-    ).select("fullName email phone location logo isActive createdAt");
-
-    if (!designer) {
-      return res.status(404).json({ message: "Designer not found" });
-    }
-
-    res.json({
-      success: true,
-      message: `Designer ${isActive ? "activated" : "deactivated"} successfully`,
-      designer,
-    });
-  } catch (err) {
-    console.error("Admin toggle designer status error:", err);
-    res.status(500).json({ message: "Status update failed", error: err.message });
-  }
+  res.status(410).json({ message: "Designer management has been removed from this platform." });
 };
-
-// ADMIN: Delete designer
 export const adminDeleteDesigner = async (req, res) => {
-  try {
-    const designer = await Designer.findByIdAndDelete(req.params.id);
-
-    if (!designer) {
-      return res.status(404).json({ message: "Designer not found" });
-    }
-
-    res.json({
-      success: true,
-      message: "Designer deleted successfully",
-    });
-  } catch (err) {
-    console.error("Admin delete designer error:", err);
-    res.status(500).json({ message: "Delete failed", error: err.message });
-  }
+  res.status(410).json({ message: "Designer management has been removed from this platform." });
 };
 
-// ADMIN: Update reseller
+// ---------- RESELLER CRUD (Legacy stubs - model removed) ----------
 export const adminUpdateReseller = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    // Get current state to detect name changes
-    const current = await Reseller.findById(id);
-    if (!current) {
-      return res.status(404).json({ message: "Reseller not found" });
-    }
-
-    const reseller = await Reseller.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    ).select("fullName email phone location address logo paymentMethod paymentDetails payoutStatus payoutRejectionReason isActive createdAt");
-
-    // Sync products: Force Claim (Nuclear Option to fix multiple account split)
-    if (updates.fullName && updates.fullName !== current.fullName) {
-      console.log(`🔄 Syncing products for Reseller ${id}: Force Claim by Name`);
-
-      const targetNames = [current.fullName, updates.fullName];
-
-      await Product.updateMany(
-        {
-          sellerType: { $in: ["Reseller", "reseller"] },
-          $or: [
-            { sellerId: id },
-            { sellerName: { $in: targetNames } }
-          ]
-        },
-        {
-          sellerName: updates.fullName,
-          sellerId: id
-        }
-      );
-    }
-
-    res.json({ success: true, reseller });
-  } catch (err) {
-    console.error("Admin update reseller error:", err);
-    res.status(500).json({ message: "Update failed", error: err.message });
-  }
+  res.status(410).json({ message: "Reseller management has been removed from this platform." });
 };
-
-// ADMIN: Activate / deactivate reseller
 export const adminToggleResellerStatus = async (req, res) => {
-  try {
-    const { isActive } = req.body;
-
-    const reseller = await Reseller.findByIdAndUpdate(
-      req.params.id,
-      { isActive },
-      { new: true, runValidators: true }
-    ).select("fullName email phone location logo paymentMethod isActive createdAt");
-
-    if (!reseller) {
-      return res.status(404).json({ message: "Reseller not found" });
-    }
-
-    res.json({
-      success: true,
-      message: `Reseller ${isActive ? "activated" : "deactivated"} successfully`,
-      reseller,
-    });
-  } catch (err) {
-    console.error("Admin toggle reseller status error:", err);
-    res.status(500).json({ message: "Status update failed", error: err.message });
-  }
+  res.status(410).json({ message: "Reseller management has been removed from this platform." });
 };
-
-// ADMIN: Delete reseller
 export const adminDeleteReseller = async (req, res) => {
-  try {
-    const reseller = await Reseller.findByIdAndDelete(req.params.id);
-
-    if (!reseller) {
-      return res.status(404).json({ message: "Reseller not found" });
-    }
-
-    res.json({
-      success: true,
-      message: "Reseller deleted successfully",
-    });
-  } catch (err) {
-    console.error("Admin delete reseller error:", err);
-    res.status(500).json({ message: "Delete failed", error: err.message });
-  }
+  res.status(410).json({ message: "Reseller management has been removed from this platform." });
 };
 
 // Helper: pick only allowed fields for user update
@@ -784,141 +524,19 @@ export const adminDeleteReview = async (req, res) => {
 
 // ---------- ESCROW & STRIPE CONNECT ----------
 
-// ADMIN: Create Stripe Connect account for a seller
+// ADMIN: Create Stripe Connect account (Legacy - Designer/Reseller removed)
 export const adminCreateConnectAccount = async (req, res) => {
-  try {
-    const { sellerId, sellerType } = req.body;
-
-    if (!sellerId || !sellerType) {
-      return res.status(400).json({ error: "sellerId and sellerType are required" });
-    }
-
-    let seller = null;
-    if (sellerType === "designer") {
-      seller = await Designer.findById(sellerId);
-    } else if (sellerType === "reseller") {
-      seller = await Reseller.findById(sellerId);
-    } else {
-      return res.status(400).json({ error: "Invalid sellerType. Must be 'designer' or 'reseller'" });
-    }
-
-    if (!seller) {
-      return res.status(404).json({ error: "Seller not found" });
-    }
-
-    // Check if already has Connect account
-    if (seller.stripeConnectAccountId) {
-      return res.status(400).json({
-        error: "Seller already has a Stripe Connect account",
-        accountId: seller.stripeConnectAccountId,
-        onboardingUrl: null, // Should we provide existing one? adminGetAccountLink does it.
-      });
-    }
-
-    // Create Connect account
-    const { accountId, onboardingUrl } = await createConnectAccount({
-      sellerId: seller._id.toString(),
-      sellerType,
-      email: seller.email,
-      fullName: seller.fullName,
-      phone: seller.phone,
-    });
-
-    // Update seller with Connect account ID
-    seller.stripeConnectAccountId = accountId;
-    seller.stripeConnectAccountStatus = "pending";
-    await seller.save();
-
-    res.json({
-      success: true,
-      message: "Stripe Connect account created",
-      accountId,
-      onboardingUrl,
-    });
-  } catch (err) {
-    console.error("Admin create Connect account error:", err);
-    res.status(500).json({ message: "Failed to create Connect account", error: err.message });
-  }
+  res.status(410).json({ message: "Stripe Connect for third-party sellers is deprecated." });
 };
 
-// ADMIN: Get Connect account status for a seller
+// ADMIN: Get Connect account status (Legacy stub)
 export const adminGetConnectAccountStatus = async (req, res) => {
-  try {
-    const { sellerId, sellerType } = req.query;
-
-    if (!sellerId || !sellerType) {
-      return res.status(400).json({ error: "sellerId and sellerType are required" });
-    }
-
-    let seller = null;
-    if (sellerType === "designer") {
-      seller = await Designer.findById(sellerId);
-    } else if (sellerType === "reseller") {
-      seller = await Reseller.findById(sellerId);
-    } else {
-      return res.status(400).json({ error: "Invalid sellerType" });
-    }
-
-    if (!seller) {
-      return res.status(404).json({ error: "Seller not found" });
-    }
-
-    if (!seller.stripeConnectAccountId) {
-      return res.json({
-        accountId: null,
-        status: "not_created",
-        message: "No Connect account created yet",
-      });
-    }
-
-    const accountStatus = await getConnectAccountStatus(seller.stripeConnectAccountId);
-
-    // Update seller's account status
-    seller.stripeConnectAccountStatus = accountStatus.status;
-    await seller.save();
-
-    res.json({
-      accountId: seller.stripeConnectAccountId,
-      ...accountStatus,
-    });
-  } catch (err) {
-    console.error("Admin get Connect account status error:", err);
-    res.status(500).json({ message: "Failed to get account status", error: err.message });
-  }
+  res.status(410).json({ message: "Stripe Connect for third-party sellers is deprecated." });
 };
 
-// ADMIN: Get account link for onboarding
+// ADMIN: Get account link for onboarding (Legacy stub)
 export const adminGetAccountLink = async (req, res) => {
-  try {
-    const { sellerId, sellerType } = req.query;
-
-    if (!sellerId || !sellerType) {
-      return res.status(400).json({ error: "sellerId and sellerType are required" });
-    }
-
-    let seller = null;
-    if (sellerType === "designer") {
-      seller = await Designer.findById(sellerId);
-    } else if (sellerType === "reseller") {
-      seller = await Reseller.findById(sellerId);
-    } else {
-      return res.status(400).json({ error: "Invalid sellerType" });
-    }
-
-    if (!seller || !seller.stripeConnectAccountId) {
-      return res.status(404).json({ error: "Seller or Connect account not found" });
-    }
-
-    const onboardingUrl = await createAccountLink(seller.stripeConnectAccountId);
-
-    res.json({
-      success: true,
-      onboardingUrl,
-    });
-  } catch (err) {
-    console.error("Admin get account link error:", err);
-    res.status(500).json({ message: "Failed to get account link", error: err.message });
-  }
+  res.status(410).json({ message: "Stripe Connect for third-party sellers is deprecated." });
 };
 
 // ADMIN: Get orders with escrow status

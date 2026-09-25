@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
-import Buy2SellChatbot from "./Buy2SellChatbot.jsx";
+
 import { useDialog } from "../context/DialogContext";
 import HoverWrapper from "./common/HoverWrapper.jsx";
 import { hasXSS } from "../utils/security";
@@ -391,9 +391,7 @@ const ContactUs = () => {
         </div>
       </section>
 
-      <div id="chatbot-section" ref={chatbotRef}>
-        <Buy2SellChatbot />
-      </div>
+
 
       <div id="footer-section" ref={footerRef}>
         <Footer />

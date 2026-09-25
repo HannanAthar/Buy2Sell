@@ -50,14 +50,19 @@ export default function AdminCustomProductEdit() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await api.get(`/admin/custom-products/${id}`);
+        // Use the standard product endpoint (works for admin too)
+        const { data } = await api.get(`/products/${id}`);
         const product = data.product;
 
         setForm({
-          title: product.name,
+          title: product.name || product.title || "",
           description: product.description || "",
-          price: product.price,
-          sizes: product.size ? product.size.split(", ").filter(Boolean) : [],
+          price: product.price || "",
+          sizes: product.size
+            ? product.size.split(", ").filter(Boolean)
+            : Array.isArray(product.sizes)
+            ? product.sizes
+            : [],
           frontImage: null,
           backImage: null,
         });
@@ -68,7 +73,7 @@ export default function AdminCustomProductEdit() {
       } catch (err) {
         console.error("Failed to fetch product:", err);
         dialog.alert("Failed to load product details", { title: "Error" });
-        navigate("/admin/custom-products");
+        navigate("/admin/products");
       } finally {
         setLoading(false);
       }
@@ -182,18 +187,19 @@ export default function AdminCustomProductEdit() {
         formData.append("backImage", form.backImage);
       }
 
-      await api.put(`/admin/custom-products/${id}`, formData, {
+      // Use admin products endpoint for updates
+      await api.put(`/admin/products/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      dialog.alert("Custom product updated successfully!", {
+      dialog.alert("Product updated successfully!", {
         title: "Success",
       });
 
       setTimeout(() => {
-        navigate("/admin/custom-products");
+        navigate("/admin/products");
       }, 1000);
     } catch (err) {
       console.error("Update error:", err);
@@ -235,7 +241,7 @@ export default function AdminCustomProductEdit() {
       <div className="bg-gradient-to-r from-[var(--primary-green)] via-[var(--dark-green)] to-[var(--accent-blue)] rounded-3xl p-8 shadow-xl text-white">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/admin/custom-products")}
+            onClick={() => navigate("/admin/products")}
             className="p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -427,7 +433,7 @@ export default function AdminCustomProductEdit() {
           {/* Submit Button */}
           <div className="flex justify-end gap-4 pt-6 border-t">
             <button
-              onClick={() => navigate("/admin/custom-products")}
+              onClick={() => navigate("/admin/products")}
               className="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
               disabled={saving}
             >

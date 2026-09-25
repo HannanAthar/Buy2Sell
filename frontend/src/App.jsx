@@ -45,26 +45,15 @@ const prefetchCriticalRoutes = () => {
 };
 
 // Lazy load everything else
-const ResellerPage = lazy(() => import("./components/ResellerPage.jsx"));
-const DesignerPage = lazy(() => import("./components/DesignerPage.jsx"));
-const DesignerSignUp = lazy(() => import("./components/DesignerSignup.jsx"));
-const ResellerSignUp = lazy(() => import("./components/ResellerSignup.jsx"));
 const Login = lazy(() => import("./components/Login.jsx"));
+
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword.jsx"));
-const DesignerUploadPage = lazy(() =>
-  import("./components/DesignerUploadPage.jsx")
-);
-const ResellerUploadPage = lazy(() =>
-  import("./components/ResellerUploadPage.jsx")
-);
 const ContactUs = lazy(() => import("./components/ContactUs.jsx"));
 const LearnMore = lazy(() => import("./components/LearnMore.jsx"));
 const CartPage = lazy(() => import("./components/CartPage.jsx"));
 const WishlistPage = lazy(() => import("./components/WishlistPage.jsx"));
-const ShoesPage = lazy(() => import("./components/ShoesPage.jsx"));
 const ClothesPage = lazy(() => import("./components/ClothesPage.jsx"));
-const BagsPage = lazy(() => import("./components/BagsPage.jsx"));
 const CheckoutPage = lazy(() => import("./components/CheckoutPage.jsx"));
 const CustomShirtDesigner = lazy(() =>
   import("./components/CustomShirtDesigner.jsx")
@@ -72,13 +61,7 @@ const CustomShirtDesigner = lazy(() =>
 const CustomProductsGallery = lazy(() =>
   import("./components/CustomProductsGallery.jsx")
 );
-const DesignerHub = lazy(() => import("./components/DesignerHub.jsx"));
-const DesignerDashboard = lazy(() =>
-  import("./components/DesignerDashboard.jsx")
-);
-const ResellerDashboard = lazy(() =>
-  import("./components/ResellerDashboard.jsx")
-);
+
 const SubmissionSuccess = lazy(() =>
   import("./components/SubmissionSuccess.jsx")
 );
@@ -97,6 +80,10 @@ const PrivacyPolicy = lazy(() => import("./components/PrivacyPolicy.jsx"));
 const TermsOfServices = lazy(() => import("./components/TermsOfServices.jsx"));
 const CookiePolicy = lazy(() => import("./components/CookiePolicy.jsx"));
 const NotFound = lazy(() => import("./components/NotFound.jsx"));
+const HowItWorks = lazy(() => import("./pages/HowItWorks.jsx"));
+const Gallery = lazy(() => import("./pages/Gallery.jsx"));
+const AboutUs = lazy(() => import("./pages/AboutUs.jsx"));
+
 
 
 const ScrollToTop = () => {
@@ -123,23 +110,15 @@ const AnimatedRoutes = () => {
         <Route path="/user/dashboard" element={<HomePage />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/about-us" element={<AboutUs />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/shoes" element={<ShoesPage />} />
         <Route path="/clothes" element={<ClothesPage />} />
-        <Route path="/bags" element={<BagsPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
 
-        <Route path="/designers" element={<DesignerPage />} />
-        <Route path="/designer-signup" element={<DesignerSignUp />} />
-        <Route path="/designer-hub" element={<DesignerHub />} />
-        <Route path="/designer-upload" element={<DesignerUploadPage />} />
-        <Route path="/designer/dashboard" element={<DesignerDashboard />} />
 
-        <Route path="/reseller" element={<ResellerPage />} />
-        <Route path="/Reseller-Signup" element={<ResellerSignUp />} />
-        <Route path="/reseller-upload" element={<ResellerUploadPage />} />
-        <Route path="/reseller/dashboard" element={<ResellerDashboard />} />
         <Route path="/submission-success" element={<SubmissionSuccess />} />
 
         <Route path="/designer-tool" element={<CustomShirtDesigner />} />

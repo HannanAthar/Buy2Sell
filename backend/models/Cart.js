@@ -16,7 +16,7 @@ const CartItemSchema = new mongoose.Schema(
     quantity: { type: Number, required: true, min: 1, default: 1 },
     sellerType: {
       type: String,
-      enum: ["designer", "reseller", "custom", "Store"],
+      enum: ["custom", "Store"],
     },
     sellerId: {
       type: mongoose.Schema.Types.ObjectId,

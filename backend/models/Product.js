@@ -2,7 +2,6 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-  // Basic Info (matching productController expectations)
   name: {
     type: String,
     required: [true, 'Product name is required'],
@@ -67,45 +66,13 @@ const productSchema = new mongoose.Schema({
   stitching: String,
   pieceCount: String,
 
-  // Gender Classification (for Clothing, Bags, Shoes)
+  // Gender Classification
   gender: {
     type: String,
     enum: ['Men', 'Women', 'Unisex'],
     default: 'Unisex',
     index: true
   },
-
-  // Listing Type
-  listingType: {
-    type: String,
-    enum: ['sale', 'rent', 'custom'],
-    default: 'sale'
-  },
-  rentPrice: String,
-  rentDuration: String,
-  securityDeposit: String,
-
-  // Seller Info
-  sellerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: function () {
-      // sellerId is not required for Admin custom products
-      return this.sellerType !== 'Admin';
-    },
-    index: true,
-    refPath: "sellerType", // dynamic ref: Designer or Reseller
-  },
-  sellerType: {
-    type: String,
-    enum: ["Designer", "Reseller", "Admin"],
-    required: [true, "Seller type is required"],
-  },
-
-  sellerName: String,
-
-  // Reseller-specific
-  condition: String,
-  hasAuthenticity: Boolean,
 
   // Status
   isActive: {
@@ -115,23 +82,8 @@ const productSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'pending',
+    default: 'approved', // Auto-approved for custom
     index: true
-  },
-
-  // Rejection Metadata (for transparent rejection workflow)
-  rejectionReason: {
-    type: String,
-    default: null
-  },
-  rejectedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin',
-    default: null
-  },
-  rejectionDate: {
-    type: Date,
-    default: null
   },
 
   // Timestamps
@@ -156,7 +108,7 @@ const productSchema = new mongoose.Schema({
     default: 0
   },
 
-  // Stock Adjustment Tracking (Audit Trail)
+  // Stock Adjustment Tracking
   stockAdjustments: [{
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -173,58 +125,15 @@ const productSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
-
-  // Rental Status Tracking
-  rentalStatus: {
-    type: String,
-    enum: ['available', 'rented'],
-    default: 'available',
-    index: true
-  },
-  currentRental: {
-    orderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Order'
-    },
-    renterId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    startDate: Date,
-    endDate: Date,
-    status: {
-      type: String,
-      enum: ['active', 'completed']
-    }
-  },
-  rentalHistory: [{
-    orderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Order'
-    },
-    renterId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    startDate: Date,
-    endDate: Date,
-    returnedDate: Date,
-    status: {
-      type: String,
-      enum: ['completed', 'ongoing']
-    }
-  }]
 }, {
   timestamps: true
 });
 
 // Indexes for faster queries
-productSchema.index({ sellerId: 1, sellerType: 1 });
 productSchema.index({ category: 1, isActive: 1 });
-productSchema.index({ category: 1, gender: 1, isActive: 1 }); // NEW: Gender filtering
+productSchema.index({ category: 1, gender: 1, isActive: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ createdAt: -1 });
-productSchema.index({ listingType: 1, rentalStatus: 1 }); // Rental queries
 
 // Text index for search
 productSchema.index({
@@ -237,10 +146,7 @@ productSchema.index({
 productSchema.pre('save', function(next) {
   if (this.images && this.images.length > 0) {
     this.images = this.images.map(img => {
-      // If it's a raw Cloudinary public ID or versioned string that doesn't start with http
       if (typeof img === 'string' && !img.startsWith('http') && !img.startsWith('/')) {
-         // Assume it's a Cloudinary path if it doesn't look like a local path
-         // But be careful not to break local paths like /uploads/...
          if (img.includes('buy2sell') || img.length > 20) { 
              return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME || 'dnnkoqxct'}/image/upload/${img}`;
          }
@@ -251,6 +157,5 @@ productSchema.pre('save', function(next) {
   next();
 });
 
-// ES6 default export (THIS IS THE KEY CHANGE!)
 const Product = mongoose.model('Product', productSchema);
 export default Product;

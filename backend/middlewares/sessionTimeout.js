@@ -1,6 +1,4 @@
 import User from "../models/User.js";
-import Designer from "../models/Designer.js";
-import Reseller from "../models/Reseller.js";
 import Admin from "../models/Admin.js";
 
 /**
@@ -64,12 +62,6 @@ export const updateUserActivity = async (user) => {
     switch (role) {
       case "buyer":
         await User.findByIdAndUpdate(id, update);
-        break;
-      case "designer":
-        await Designer.findByIdAndUpdate(id, update);
-        break;
-      case "reseller":
-        await Reseller.findByIdAndUpdate(id, update);
         break;
       case "admin":
         // Admin activity is tracked but timeouts are exempt

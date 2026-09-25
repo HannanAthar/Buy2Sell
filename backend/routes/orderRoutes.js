@@ -95,9 +95,7 @@ router.get("/stripe-success", async (req, res) => {
         console.log("💾 Creating order from pending data...");
 
         // Initialize escrow transfers
-        const { default: Designer } = await import("../models/Designer.js");
-        const { default: Reseller } = await import("../models/Reseller.js");
-
+                
         const escrowTransfers = [];
         for (const item of pendingOrder.items) {
             if (item.sellerId && (item.sellerType === 'designer' || item.sellerType === 'reseller')) {

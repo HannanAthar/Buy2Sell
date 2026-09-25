@@ -1,7 +1,5 @@
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
-import Designer from "../models/Designer.js";
-import Reseller from "../models/Reseller.js";
 import { sendEmail, buyerTemplates, adminTemplates } from "../services/emailService.js";
 import {
   decrementStockForOrder,
@@ -775,9 +773,7 @@ export const confirmCODPayment = async (req, res) => {
     }
 
     for (const [sid, data] of sellerTransfersMap) {
-      // Dynamically import models
-      const { default: Designer } = await import("../models/Designer.js");
-      const { default: Reseller } = await import("../models/Reseller.js");
+      // Dynamic imports removed
 
       let stripeConnectAccountId = null;
       if (data.sellerType === 'designer') {

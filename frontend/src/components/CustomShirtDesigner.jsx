@@ -4,7 +4,7 @@ import Header from "./Header";
 import api from "../api/axios"; // Import axios for API calls
 import { readStorage, writeStorage } from "../utils/storage";
 
-/* ——— tiny UI ——— */
+/* ΓÇöΓÇöΓÇö tiny UI ΓÇöΓÇöΓÇö */
 const Container = ({ children, className = "" }) => (
   <div className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>
     {children}
@@ -27,7 +27,7 @@ const Button = ({ children, className = "", ...props }) => (
   </button>
 );
 
-/* ——— PRODUCT CATALOG (each product has per-color front/back) ———
+/* ΓÇöΓÇöΓÇö PRODUCT CATALOG (each product has per-color front/back) ΓÇöΓÇöΓÇö
    Replace the paths with your actual assets. Keep the keys exactly: white, red, black, blue
 */
 const PRODUCTS = {
@@ -90,7 +90,7 @@ const PRODUCTS = {
   ],
 };
 
-/* ——— allowed color choices (fixed list) ——— */
+/* ΓÇöΓÇöΓÇö allowed color choices (fixed list) ΓÇöΓÇöΓÇö */
 const COLOR_OPTIONS = [
   { key: "white", label: "White", color: "#ffffff" },
   { key: "red", label: "Red", color: "#ef4444" },
@@ -98,7 +98,7 @@ const COLOR_OPTIONS = [
   { key: "blue", label: "Blue", color: "#3b82f6" },
 ];
 
-/* ——— NEW: Image Upload Dialog ——— */
+/* ΓÇöΓÇöΓÇö NEW: Image Upload Dialog ΓÇöΓÇöΓÇö */
 function ImageUploadDialog({ file, isOpen, onClose, onApply }) {
   const [removeBg, setRemoveBg] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -156,7 +156,7 @@ function ImageUploadDialog({ file, isOpen, onClose, onApply }) {
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
           >
-            ✕
+            Γ£ò
           </button>
         </div>
 
@@ -228,7 +228,7 @@ function ImageUploadDialog({ file, isOpen, onClose, onApply }) {
   );
 }
 
-/* ——— left toolbar ——— */
+/* ΓÇöΓÇöΓÇö left toolbar ΓÇöΓÇöΓÇö */
 const ToolBtn = ({ title, children, disabled, onClick, className = "" }) => (
   <button
     title={title}
@@ -397,12 +397,12 @@ function TopToolbar({
           onClick={onBack}
           className="text-gray-600 hover:text-gray-800 text-sm whitespace-nowrap"
         >
-          ← Back
+          ΓåÉ Back
         </button>
         <div className="hidden md:block text-sm text-gray-600">
           Editing:{" "}
           <span className="font-semibold">{product?.name || "Tee"}</span>
-          {" • "}
+          {" ΓÇó "}
           <span className="capitalize">{selectedColorKey}</span>
         </div>
         <div className="flex gap-2">
@@ -440,16 +440,16 @@ function TopToolbar({
           Add to Cart
         </Button>
         <p className="text-xs text-gray-500 mt-1">
-          Single side: Rs 1200 • Both sides: Rs 1600
+          Single side: Rs 1200 ΓÇó Both sides: Rs 1600
         </p>
       </div>
     </div>
   );
 }
 
-/* ——— product browser ——— */
+/* ΓÇöΓÇöΓÇö product browser ΓÇöΓÇöΓÇö */
 const ph =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='450'%3E%3Crect width='360' height='450' fill='%23f1f5f9'/%3E%3Ctext x='180' y='230' font-family='Arial' font-size='14' fill='%2364748b' text-anchor='middle'%3E👕 Product%3C/text%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='450'%3E%3Crect width='360' height='450' fill='%23f1f5f9'/%3E%3Ctext x='180' y='230' font-family='Arial' font-size='14' fill='%2364748b' text-anchor='middle'%3E≡ƒæò Product%3C/text%3E%3C/svg%3E";
 
 function getProductImage(p, side = "front", colorKey) {
   const key = colorKey || p.defaultColor || "white";
@@ -467,7 +467,7 @@ function ProductBrowse({ onSelect }) {
           Browse Our Products
         </h1>
         <p className="text-slate-600">
-          Hover to see the back • Click to customize
+          Hover to see the back ΓÇó Click to customize
         </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -507,11 +507,11 @@ function ProductBrowse({ onSelect }) {
   );
 }
 
-/* ——— helpers ——— */
+/* ΓÇöΓÇöΓÇö helpers ΓÇöΓÇöΓÇö */
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const makeId = () => Math.random().toString(36).slice(2, 9);
 
-/* ——— Background Removal Utility ——— */
+/* ΓÇöΓÇöΓÇö Background Removal Utility ΓÇöΓÇöΓÇö */
 const removeBackground = async (imageFile) => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -729,7 +729,7 @@ const TEXT_PALETTE = [
   "#7c3aed",
 ];
 
-/* ——— shape icon + renderer (same as before) ——— */
+/* ΓÇöΓÇöΓÇö shape icon + renderer (same as before) ΓÇöΓÇöΓÇö */
 function ShapeIcon({ kind }) {
   const C = 24,
     center = C / 2,
@@ -883,7 +883,7 @@ function renderShapeSVG(s) {
   );
 }
 
-/* ——— CANVAS ——— */
+/* ΓÇöΓÇöΓÇö CANVAS ΓÇöΓÇöΓÇö */
 function ShirtMock({
   product,
   view,
@@ -1060,7 +1060,7 @@ function ShirtMock({
                 onDeleteShape(s.id);
               }}
             >
-              ✕
+              Γ£ò
             </button>
 
             {/* Rotate Handle - Top Right */}
@@ -1098,7 +1098,7 @@ function ShirtMock({
                 window.addEventListener("pointerup", onRotateEnd, { once: true });
               }}
             >
-              ↻
+              Γå╗
             </div>
 
             {/* Scale Handle - Bottom Right */}
@@ -1128,7 +1128,7 @@ function ShirtMock({
                 window.addEventListener("pointerup", onScaleEnd, { once: true });
               }}
             >
-              ⇲
+              Γç▓
             </div>
           </>
         )}
@@ -1212,7 +1212,7 @@ function ShirtMock({
                 onDeleteDecal(d.id);
               }}
             >
-              ✕
+              Γ£ò
             </button>
 
             {/* Rotate Handle - Top Right (Drag to rotate) */}
@@ -1269,7 +1269,7 @@ function ShirtMock({
                 });
               }}
             >
-              ↻
+              Γå╗
             </div>
 
             {/* Scale Handle - Bottom Right (Drag to scale) */}
@@ -1310,7 +1310,7 @@ function ShirtMock({
                 });
               }}
             >
-              ⇲
+              Γç▓
             </div>
           </>
         )}
@@ -1345,7 +1345,7 @@ function ShirtMock({
             }}
           />
 
-          {/* Order: shapes → image → decals → text */}
+          {/* Order: shapes ΓåÆ image ΓåÆ decals ΓåÆ text */}
           {shapes.map(renderShape)}
 
           {img.src && (
@@ -1414,7 +1414,7 @@ function ShirtMock({
                       onDeleteImage();
                     }}
                   >
-                    ✕
+                    Γ£ò
                   </button>
 
                   {/* Rotate Handle - Top Right (Drag to rotate) */}
@@ -1474,7 +1474,7 @@ function ShirtMock({
                       });
                     }}
                   >
-                    ↻
+                    Γå╗
                   </div>
 
                   {/* Scale Handle - Bottom Right (Drag to scale) */}
@@ -1515,7 +1515,7 @@ function ShirtMock({
                       });
                     }}
                   >
-                    ⇲
+                    Γç▓
                   </div>
                 </>
               </div>
@@ -1595,7 +1595,7 @@ function ShirtMock({
                         onDeleteText();
                       }}
                     >
-                      ✕
+                      Γ£ò
                     </button>
 
                     {/* Rotate Handle - Top Right */}
@@ -1633,7 +1633,7 @@ function ShirtMock({
                         window.addEventListener("pointerup", onRotateEnd, { once: true });
                       }}
                     >
-                      ↻
+                      Γå╗
                     </div>
 
                     {/* Scale Handle - Bottom Right */}
@@ -1663,7 +1663,7 @@ function ShirtMock({
                         window.addEventListener("pointerup", onScaleEnd, { once: true });
                       }}
                     >
-                      ⇲
+                      Γç▓
                     </div>
                   </>
                 )}
@@ -1676,7 +1676,7 @@ function ShirtMock({
   );
 }
 
-/* ——— RIGHT PANEL ——— */
+/* ΓÇöΓÇöΓÇö RIGHT PANEL ΓÇöΓÇöΓÇö */
 function RightPanel({
   activeTab,
   design,
@@ -1767,14 +1767,14 @@ function RightPanel({
           onClick={() => setActiveTab("welcome")}
           className="mb-4 text-sm text-blue-600 hover:underline"
         >
-          ← Back
+          ΓåÉ Back
         </button>
         <ProductOptions />
         <h2 className="text-xl font-bold mb-6">Add Images</h2>
         <div className="space-y-5">
           <div className="grid place-items-center rounded-xl border-2 border-dashed border-gray-300 p-8 text-center">
             <div>
-              <div className="text-4xl mb-4">📷</div>
+              <div className="text-4xl mb-4">≡ƒô╖</div>
               <div className="font-semibold mb-2">Upload Image</div>
               <div className="text-gray-500 text-sm mb-4">PNG/JPG</div>
                 <label className="cursor-pointer bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-colors">
@@ -1826,7 +1826,7 @@ function RightPanel({
               <div>
                 <h4 className="font-semibold mb-2">Rotation</h4>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xs text-gray-500 w-12">-360°</span>
+                  <span className="text-xs text-gray-500 w-12">-360┬░</span>
                   <input
                     type="range"
                     min={-360}
@@ -1837,7 +1837,7 @@ function RightPanel({
                     }
                     className="flex-1"
                   />
-                  <span className="text-xs text-gray-500 w-12">360°</span>
+                  <span className="text-xs text-gray-500 w-12">360┬░</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-700">Degrees:</span>
@@ -1851,7 +1851,7 @@ function RightPanel({
                     }
                     className="w-20 border border-gray-300 rounded px-2 py-1 text-sm"
                   />
-                  <span className="text-sm text-gray-700">°</span>
+                  <span className="text-sm text-gray-700">┬░</span>
                 </div>
               </div>
               <div className="text-xs text-gray-500">
@@ -1872,7 +1872,7 @@ function RightPanel({
           onClick={() => setActiveTab("welcome")}
           className="mb-4 text-sm text-blue-600 hover:underline"
         >
-          ← Back
+          ΓåÉ Back
         </button>
         <ProductOptions />
         <h2 className="text-xl font-bold mb-6">Add Text</h2>
@@ -2024,7 +2024,7 @@ function RightPanel({
           onClick={() => setActiveTab("welcome")}
           className="mb-4 text-sm text-blue-600 hover:underline"
         >
-          ← Back
+          ΓåÉ Back
         </button>
         <ProductOptions />
         <h2 className="text-xl font-bold mb-4">Add Shapes</h2>
@@ -2111,7 +2111,7 @@ function RightPanel({
           onClick={() => setActiveTab("welcome")}
           className="mb-4 text-sm text-blue-600 hover:underline"
         >
-          ← Back
+          ΓåÉ Back
         </button>
         <ProductOptions />
         <h2 className="text-xl font-bold mb-4">Add Templates</h2>
@@ -2154,7 +2154,7 @@ function RightPanel({
             <div>
               <h4 className="font-semibold mb-2">Rotation</h4>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs text-gray-500 w-12">-360°</span>
+                <span className="text-xs text-gray-500 w-12">-360┬░</span>
                 <input
                   type="range"
                   min={-360}
@@ -2165,7 +2165,7 @@ function RightPanel({
                   }
                   className="flex-1"
                 />
-                <span className="text-xs text-gray-500 w-12">360°</span>
+                <span className="text-xs text-gray-500 w-12">360┬░</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-700">Degrees:</span>
@@ -2179,7 +2179,7 @@ function RightPanel({
                   }
                   className="w-20 border border-gray-300 rounded px-2 py-1 text-sm"
                 />
-                <span className="text-sm text-gray-700">°</span>
+                <span className="text-sm text-gray-700">┬░</span>
               </div>
             </div>
             <div className="text-xs text-gray-500 mt-1">
@@ -2205,13 +2205,13 @@ function RightPanel({
         >
           <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="flex items-center gap-3">
-              <span className="text-xl">📷</span>
+              <span className="text-xl">≡ƒô╖</span>
               <div>
                 <div className="font-semibold">Add Images</div>
                 <div className="text-sm text-gray-600">Upload your image</div>
               </div>
             </div>
-            <span>›</span>
+            <span>ΓÇ║</span>
           </div>
         </button>
         <button
@@ -2226,7 +2226,7 @@ function RightPanel({
                 <div className="text-sm text-gray-600">Type anything</div>
               </div>
             </div>
-            <span>›</span>
+            <span>ΓÇ║</span>
           </div>
         </button>
         <button
@@ -2235,13 +2235,13 @@ function RightPanel({
         >
           <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="flex items-center gap-3">
-              <span className="text-xl">⬛</span>
+              <span className="text-xl">Γ¼¢</span>
               <div>
                 <div className="font-semibold">Add Shapes</div>
                 <div className="text-sm text-gray-600">Choose & customize</div>
               </div>
             </div>
-            <span>›</span>
+            <span>ΓÇ║</span>
           </div>
         </button>
         <button
@@ -2250,7 +2250,7 @@ function RightPanel({
         >
           <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="flex items-center gap-3">
-              <span className="text-xl">🎨</span>
+              <span className="text-xl">≡ƒÄ¿</span>
               <div>
                 <div className="font-semibold">Add Templates</div>
                 <div className="text-sm text-gray-600">
@@ -2258,7 +2258,7 @@ function RightPanel({
                 </div>
               </div>
             </div>
-            <span>›</span>
+            <span>ΓÇ║</span>
           </div>
         </button>
       </div>
@@ -2266,7 +2266,7 @@ function RightPanel({
   );
 }
 
-/* ——— MAIN ——— */
+/* ΓÇöΓÇöΓÇö MAIN ΓÇöΓÇöΓÇö */
 export default function CustomShirtDesigner() {
   const [mode, setMode] = useState("browse");
   const [product, setProduct] = useState(null);
@@ -2299,22 +2299,22 @@ export default function CustomShirtDesigner() {
   }, []);
 
   const handleFullReset = () => {
-    // زوم ری سیٹ
+    // ╪▓┘ê┘à ╪▒█î ╪│█î┘╣
     setZoom(1.0);
 
-    // منتخب ٹیمپلیٹ کی روٹیشن اور سائز ری سیٹ
+    // ┘à┘å╪¬╪«╪¿ ┘╣█î┘à┘╛┘ä█î┘╣ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪º┘ê╪▒ ╪│╪º╪ª╪▓ ╪▒█î ╪│█î┘╣
     if (selectedDecalId) {
       setDecalScale(selectedDecalId, 1);
       setDecalRotate(selectedDecalId, 0);
     }
 
-    // منتخب شے کی روٹیشن اور سائز ری سیٹ
+    // ┘à┘å╪¬╪«╪¿ ╪┤█Æ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪º┘ê╪▒ ╪│╪º╪ª╪▓ ╪▒█î ╪│█î┘╣
     if (selectedShapeId) {
       setShapeSize(selectedShapeId, 90);
       setShapeRotate(selectedShapeId, 0);
     }
 
-    // امیج کی روٹیشن اور سائز ری سیٹ
+    // ╪º┘à█î╪¼ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪º┘ê╪▒ ╪│╪º╪ª╪▓ ╪▒█î ╪│█î┘╣
     if (design[view].image.src) {
       const next = {
         ...design,
@@ -2331,7 +2331,7 @@ export default function CustomShirtDesigner() {
       snapshot(next);
     }
 
-    // ٹیکسٹ کی روٹیشن ری سیٹ
+    // ┘╣█î┌⌐╪│┘╣ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪▒█î ╪│█î┘╣
     if (design[view].text.value) {
       const next = {
         ...design,
@@ -2347,7 +2347,7 @@ export default function CustomShirtDesigner() {
       snapshot(next);
     }
 
-    // تمام ٹیمپلیٹس کی روٹیشن اور سائز ری سیٹ
+    // ╪¬┘à╪º┘à ┘╣█î┘à┘╛┘ä█î┘╣╪│ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪º┘ê╪▒ ╪│╪º╪ª╪▓ ╪▒█î ╪│█î┘╣
     if (design[view].decals.length > 0) {
       const next = {
         ...design,
@@ -2364,7 +2364,7 @@ export default function CustomShirtDesigner() {
       snapshot(next);
     }
 
-    // تمام شکلوں کی روٹیشن اور سائز ری سیٹ
+    // ╪¬┘à╪º┘à ╪┤┌⌐┘ä┘ê┌║ ┌⌐█î ╪▒┘ê┘╣█î╪┤┘å ╪º┘ê╪▒ ╪│╪º╪ª╪▓ ╪▒█î ╪│█î┘╣
     if (design[view].shapes.length > 0) {
       const next = {
         ...design,
@@ -2442,7 +2442,7 @@ export default function CustomShirtDesigner() {
     setHIndex(0);
   };
 
-  // Mutators — image/text
+  // Mutators ΓÇö image/text
   const setSideImage = (side, url) => {
     const next = {
       ...design,
@@ -2793,7 +2793,7 @@ export default function CustomShirtDesigner() {
   // 2. Improved handleAddToCart function - NOW SAVES TO BACKEND!
   const handleAddToCart = async () => {
     try {
-      console.log("🎨 Starting cart add process...");
+      console.log("≡ƒÄ¿ Starting cart add process...");
 
       // Check if user is logged in
       const token = localStorage.getItem("token");
@@ -2809,8 +2809,8 @@ export default function CustomShirtDesigner() {
       // Show loading toast
       const loadingToast = toast.loading("Preparing your custom design...");
 
-      // 🔥 NEW: Capture BOTH front and back design previews
-      console.log("📸 Capturing front and back design images...");
+      // ≡ƒöÑ NEW: Capture BOTH front and back design previews
+      console.log("≡ƒô╕ Capturing front and back design images...");
 
       // Helper function to capture a specific side using canvas rendering
       // Uses proper object-contain logic to match screen display
@@ -3016,7 +3016,7 @@ export default function CustomShirtDesigner() {
 
           return canvas.toDataURL("image/png");
         } catch (err) {
-          console.error(`❌ Error capturing ${sideView}:`, err);
+          console.error(`Γ¥î Error capturing ${sideView}:`, err);
           return null;
         }
       };
@@ -3027,11 +3027,11 @@ export default function CustomShirtDesigner() {
 
       if (!frontImage && !backImage) {
         toast.error("Could not capture design preview", { id: loadingToast });
-        console.error("❌ Failed to capture any preview");
+        console.error("Γ¥î Failed to capture any preview");
         return;
       }
 
-      console.log("✅ Design images captured:", {
+      console.log("Γ£à Design images captured:", {
         hasFront: !!frontImage,
         hasBack: !!backImage,
       });
@@ -3042,7 +3042,7 @@ export default function CustomShirtDesigner() {
       const colorLabel =
         COLOR_OPTIONS.find((c) => c.key === selectedColorKey)?.label ||
         selectedColorKey;
-      const title = `${product?.name || "Custom Tee"} — ${colorLabel}`;
+      const title = `${product?.name || "Custom Tee"} ΓÇö ${colorLabel}`;
 
       const price = computeCustomPrice();
 
@@ -3088,7 +3088,7 @@ export default function CustomShirtDesigner() {
         },
       };
 
-      console.log("🛒 Preparing cart item:", {
+      console.log("≡ƒ¢Æ Preparing cart item:", {
         hasPreview: !!cartItem.customPreview,
         imageUrlsCount: cartItem.imageUrls?.length,
         price: cartItem.price,
@@ -3097,7 +3097,7 @@ export default function CustomShirtDesigner() {
 
       // Save preview images to backend to avoid localStorage quota issues
       try {
-        console.log("📤 Saving custom design previews to server...");
+        console.log("≡ƒôñ Saving custom design previews to server...");
         const previewResponse = await api.post("/custom-designs/preview", {
           designId: cartItem.id,
           frontImage: frontImage,
@@ -3107,7 +3107,7 @@ export default function CustomShirtDesigner() {
 
         if (previewResponse.data.success) {
           const serverUrls = previewResponse.data.imageUrls || [];
-          console.log("✅ Previews saved to server:", serverUrls);
+          console.log("Γ£à Previews saved to server:", serverUrls);
 
           // Update cart item to use server URLs instead of data URIs
           if (serverUrls.length > 0) {
@@ -3118,7 +3118,7 @@ export default function CustomShirtDesigner() {
         }
       } catch (saveError) {
         console.warn(
-          "⚠️ Failed to save previews to server, using data URIs:",
+          "ΓÜá∩╕Å Failed to save previews to server, using data URIs:",
           saveError
         );
         // Continue with data URIs if server save fails
@@ -3128,7 +3128,7 @@ export default function CustomShirtDesigner() {
       const response = await api.post("/cart", cartItem);
 
       if (response.data.success) {
-        console.log("✅ Added to backend cart successfully");
+        console.log("Γ£à Added to backend cart successfully");
 
         // Also update localStorage for immediate UI feedback
         const existing = readStorage("cart");
@@ -3146,7 +3146,7 @@ export default function CustomShirtDesigner() {
         toast.error("Failed to add to cart", { id: loadingToast });
       }
     } catch (e) {
-      console.error("❌ Add-to-cart error:", e);
+      console.error("Γ¥î Add-to-cart error:", e);
 
       if (e.response?.status === 401) {
         toast.error("Please login to add items to cart");
@@ -3286,7 +3286,7 @@ export default function CustomShirtDesigner() {
                     </>
                   ) : (
                     <>
-                      <span className="mr-2 text-xl font-bold">−</span> Minimize
+                      <span className="mr-2 text-xl font-bold">ΓêÆ</span> Minimize
                       Tools
                     </>
                   )}

@@ -1,6 +1,4 @@
 import Product from "../models/Product.js"
-import Designer from "../models/Designer.js"
-import Reseller from "../models/Reseller.js"
 import Cart from "../models/Cart.js"
 import Wishlist from "../models/Wishlist.js"
 import fs from 'fs';
@@ -47,14 +45,8 @@ export const createProduct = async (req, res, next) => {
       originalPrice
     } = req.body;
 
-    // Extract user info (your middleware uses 'id' and 'role')
-    const userId = req.user.id;
-    const userType = req.user.role;
-
     // DEBUG: Log user info
     console.log('👤 User info:', req.user);
-    console.log('👤 userId:', userId);
-    console.log('👤 userType:', userType);
 
     // Validation
     if (!name || !description || !price || !category) {
@@ -82,19 +74,12 @@ export const createProduct = async (req, res, next) => {
       return res.status(400).json({ error: "At least one product image is required." });
     }
 
-    // Get seller info
-    let seller;
-    if (userType === "designer") {
-      seller = await Designer.findById(userId);
-    } else if (userType === "reseller") {
-      seller = await Reseller.findById(userId);
-    } else {
-      return res.status(403).json({ error: "Only designers and resellers can add products." });
+    // Only admin can create products in the custom clothing platform
+    const userRole = req.user.role;
+    if (userRole !== 'admin') {
+      return res.status(403).json({ error: "Only admins can add products." });
     }
-
-    if (!seller) {
-      return res.status(404).json({ error: "Seller not found." });
-    }
+    const sellerName = 'Admin';
 
     // Process images - files are already saved by multer (Cloudinary)
     const images = req.files.map((file) => file.path);
@@ -119,9 +104,9 @@ export const createProduct = async (req, res, next) => {
       pieceCount: pieceCount || undefined,
       tags: tags || undefined,
       images,
-      sellerId: userId,
-      sellerType: userType === "designer" ? "Designer" : "Reseller",
-      sellerName: seller.brandName || seller.wardrobeName || seller.fullName,
+      sellerId: req.user.id,
+      sellerType: 'Admin',
+      sellerName: sellerName,
       listingType: listingType || 'sale',
       isOnSale: isOnSale === 'true' || isOnSale === true,
       salePercentage: salePercentage ? Number(salePercentage) : undefined,

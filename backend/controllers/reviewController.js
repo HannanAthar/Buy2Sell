@@ -1,7 +1,5 @@
 import Review from '../models/Review.js';
 import Product from '../models/Product.js';
-import Designer from '../models/Designer.js';
-import Reseller from '../models/Reseller.js';
 import User from '../models/User.js'; // Assuming regular users rate
 
 // --- HELPER WRAPPERS ---

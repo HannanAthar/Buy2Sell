@@ -1,6 +1,4 @@
 import User from '../models/User.js';
-import Designer from '../models/Designer.js';
-import Reseller from '../models/Reseller.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -111,170 +109,6 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
-// Login Designer
-export const loginDesigner = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
-    }
-
-    // Find designer by email
-    const designer = await Designer.findOne({ email: email.toLowerCase().trim() });
-
-    if (!designer) {
-      return res.status(401).json({ error: 'Invalid credentials.' });
-    }
-
-    // 🔒 SECURITY: Check if account is locked
-    if (designer.lockUntil && designer.lockUntil > Date.now()) {
-      const remainingMinutes = Math.ceil((designer.lockUntil - Date.now()) / 60000);
-      return res.status(429).json({
-        error: `Account temporarily locked. Try again in ${remainingMinutes} minutes.`
-      });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, designer.password);
-
-    if (!isPasswordValid) {
-      // 🔒 SECURITY: Increment failed attempts
-      designer.loginAttempts = (designer.loginAttempts || 0) + 1;
-
-      if (designer.loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-        designer.lockUntil = new Date(Date.now() + LOCK_TIME_MS);
-        await designer.save({ validateBeforeSave: false });
-        return res.status(429).json({
-          error: 'Too many failed attempts. Account locked for 30 minutes.'
-        });
-      }
-
-      await designer.save({ validateBeforeSave: false });
-      return res.status(401).json({ error: 'Invalid credentials.' });
-    }
-
-    // 🔒 SECURITY: Reset lockout on successful login & Update lastActivity
-    await Designer.updateOne({ _id: designer._id }, {
-      $set: {
-        lastLogin: new Date(),
-        lastActivity: new Date(), // Reset activity timer
-        loginAttempts: 0
-      },
-      $unset: { lockUntil: 1 }
-    });
-
-    // Generate token
-    const token = generateToken({
-      id: designer._id,
-      email: designer.email,
-      role: designer.role
-    });
-
-    // 🔒 SECURITY: Set HttpOnly cookie
-    setAuthCookie(res, token);
-
-    res.json({
-      success: true,
-      token, // Backward compatibility
-      role: designer.role,
-      user: {
-        id: designer._id,
-        fullName: designer.fullName,
-        email: designer.email,
-        phone: designer.phone,
-        role: designer.role,
-        isVerified: designer.isVerified
-      }
-    });
-
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Login Reseller
-export const loginReseller = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
-    }
-
-    // Find reseller by email
-    const reseller = await Reseller.findOne({ email: email.toLowerCase().trim() });
-
-    if (!reseller) {
-      return res.status(401).json({ error: 'Invalid credentials.' });
-    }
-
-    // 🔒 SECURITY: Check if account is locked
-    if (reseller.lockUntil && reseller.lockUntil > Date.now()) {
-      const remainingMinutes = Math.ceil((reseller.lockUntil - Date.now()) / 60000);
-      return res.status(429).json({
-        error: `Account temporarily locked. Try again in ${remainingMinutes} minutes.`
-      });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, reseller.password);
-
-    if (!isPasswordValid) {
-      // 🔒 SECURITY: Increment failed attempts
-      reseller.loginAttempts = (reseller.loginAttempts || 0) + 1;
-
-      if (reseller.loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-        reseller.lockUntil = new Date(Date.now() + LOCK_TIME_MS);
-        await reseller.save({ validateBeforeSave: false });
-        return res.status(429).json({
-          error: 'Too many failed attempts. Account locked for 30 minutes.'
-        });
-      }
-
-      await reseller.save({ validateBeforeSave: false });
-      return res.status(401).json({ error: 'Invalid credentials.' });
-    }
-
-    // 🔒 SECURITY: Reset lockout on successful login & Update lastActivity
-    await Reseller.updateOne({ _id: reseller._id }, {
-      $set: {
-        lastLogin: new Date(),
-        lastActivity: new Date(), // Reset activity timer
-        loginAttempts: 0
-      },
-      $unset: { lockUntil: 1 }
-    });
-
-    // Generate token
-    const token = generateToken({
-      id: reseller._id,
-      email: reseller.email,
-      role: reseller.role
-    });
-
-    // 🔒 SECURITY: Set HttpOnly cookie
-    setAuthCookie(res, token);
-
-    res.json({
-      success: true,
-      token, // Backward compatibility
-      role: reseller.role,
-      user: {
-        id: reseller._id,
-        fullName: reseller.fullName,
-        email: reseller.email,
-        phone: reseller.phone,
-        role: reseller.role,
-        isVerified: reseller.isVerified
-      }
-    });
-
-  } catch (err) {
-    next(err);
-  }
-};
-
 
 // Forgot Password - Send OTP
 export const forgotPassword = async (req, res, next) => {
@@ -289,8 +123,6 @@ export const forgotPassword = async (req, res, next) => {
 
     // Check all collections
     let user = await User.findOne({ email: normalizedEmail });
-    if (!user) user = await Designer.findOne({ email: normalizedEmail });
-    if (!user) user = await Reseller.findOne({ email: normalizedEmail });
 
     // If user not found, return explicit error (User Request)
     if (!user) {
@@ -349,8 +181,6 @@ export const resetPassword = async (req, res, next) => {
 
     // Check all collections
     let user = await User.findOne({ email: normalizedEmail });
-    if (!user) user = await Designer.findOne({ email: normalizedEmail });
-    if (!user) user = await Reseller.findOne({ email: normalizedEmail });
 
     if (!user) {
       return res.status(400).json({ error: 'Invalid or expired code.' });

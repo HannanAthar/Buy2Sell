@@ -19,8 +19,7 @@ import rateLimit from 'express-rate-limit';
 
 
 
-import resellerRoutes from './routes/resellerRoutes.js';
-import designerRoutes from './routes/designerRoutes.js';
+
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -37,7 +36,7 @@ import productRoutes from './routes/productRoutes.js';
 import { protect } from './middlewares/authMiddleware.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import notifyRoutes from "./routes/notifyRoutes.js";
-import chatbotRoutes from './routes/chatbotRoutes.js';
+
 import reviewRoutes from './routes/reviewRoutes.js';
 import diagnosticRoutes from './routes/diagnosticRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
@@ -143,8 +142,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 /**
  * API ROUTES
  */
-app.use('/api/reseller', resellerRoutes);
-app.use('/api/designer', designerRoutes);
+
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/orders', orderRoutes);
@@ -161,7 +159,7 @@ app.use('/api/custom-products', adminCustomProductRoutes); // Public routes
 app.use('/api/products', productRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use("/api/notify", notifyRoutes);
-app.use('/api/chatbot', chatbotRoutes);
+
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/diagnostic', diagnosticRoutes);
 app.use('/api/contact', contactRoutes);
@@ -182,16 +180,11 @@ app.get('/api/health', (req, res) => {
 });
 
 // Protected test routes
-app.get('/api/protected/reseller', protect(['reseller']), (req, res) => {
-  res.json({ message: 'This is a protected route for resellers only', user: req.user });
-});
-app.get('/api/protected/designer', protect(['designer']), (req, res) => {
-  res.json({ message: 'This is a protected route for designers only', user: req.user });
-});
+
 app.get('/api/protected/user', protect(['buyer']), (req, res) => {
   res.json({ message: 'This route is accessible by buyers only', user: req.user });
 });
-app.get('/api/protected/all', protect(['reseller', 'designer', 'buyer']), (req, res) => {
+app.get('/api/protected/all', protect(['buyer']), (req, res) => {
   res.json({ message: 'This route is accessible by all user types', user: req.user });
 });
 

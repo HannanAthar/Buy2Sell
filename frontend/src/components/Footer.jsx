@@ -125,9 +125,7 @@ const Footer = () => {
                 </span>
               </div>
               <p className="text-gray-400 mb-8 leading-relaxed text-sm max-w-xs mx-auto md:mx-0">
-                Your premier luxury marketplace connecting designers, resellers,
-                and buyers. Discover authentic designer pieces and turn your
-                luxury wardrobe into profit.
+                Your premium destination for high-end custom apparel. Design your own clothes in our 3D Studio and wear your imagination with absolute confidence.
               </p>
 
               {/* Contact Info */}
@@ -165,20 +163,20 @@ const Footer = () => {
               <ul className="space-y-4">
                 <li>
                   <Link
-                    to="/Designer-Signup"
+                    to="/designer-tool"
                     className="text-gray-400 hover:text-emerald-400 transition-all duration-200 flex items-center group text-sm font-medium"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0"></span>
-                    Designer Registration
+                    Customize Clothes
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/Reseller-Signup"
+                    to="/gallery"
                     className="text-gray-400 hover:text-emerald-400 transition-all duration-200 flex items-center group text-sm font-medium"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0"></span>
-                    Reseller Registration
+                    Design Gallery
                   </Link>
                 </li>
               </ul>

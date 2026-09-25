@@ -34,8 +34,6 @@ export default function AdminProductManagement() {
   const dialog = useDialog();
   const [items, setItems] = useState([]);
   const [q, setQ] = useState("");
-  const [listingType, setListingType] = useState("all");
-  const [sellerType, setSellerType] = useState("Designer");
   const [status, setStatus] = useState("all");
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -47,19 +45,9 @@ export default function AdminProductManagement() {
   const navigate = useNavigate();
 
   // Auto-filter if ID passed
-  // Auto-filter if ID passed
   useEffect(() => {
     if (location.state?.editProductId) {
       setQ(location.state.editProductId);
-
-      // Adjust seller type based on source
-      if (location.state.from === "Resellers") {
-        setSellerType("Reseller");
-      } else if (location.state.from === "Designers") {
-        setSellerType("Designer");
-      } else {
-        setSellerType("all");
-      }
     }
   }, [location.state]);
 
@@ -71,7 +59,7 @@ export default function AdminProductManagement() {
     setFormData({
       name: p.name || p.title || "",
       description: p.description || "",
-      sellerType: p.sellerType || "Designer",
+      sellerType: p.sellerType || "Admin",
       sellerId: p.sellerId || "",
       sellerName: p.sellerName || "",
       listingType: p.listingType || "sale",
@@ -112,7 +100,7 @@ export default function AdminProductManagement() {
   const emptyForm = {
     name: "",
     description: "",
-    sellerType: "Designer", // Designer / Reseller
+    sellerType: "Admin", // Admin only
     sellerId: "",
     sellerName: "",
     listingType: "sale", // sale / rent
@@ -146,8 +134,8 @@ export default function AdminProductManagement() {
   });
 
   const filtersSummary = useMemo(
-    () => ({ q, listingType, sellerType, status, page }),
-    [q, listingType, sellerType, status, page]
+    () => ({ q, status, page }),
+    [q, status, page]
   );
 
   const load = async (pageNum = 1) => {
@@ -157,15 +145,12 @@ export default function AdminProductManagement() {
       console.log("📡 Fetching products with params:", {
         pageNum,
         q,
-        listingType,
-        sellerType,
+        status,
       });
 
-      const params = { page: pageNum, limit: 12 };
+      const params = { page: pageNum, limit: 12, listingType: "custom" };
 
       if (q && q.trim()) params.q = q.trim();
-      if (listingType !== "all") params.listingType = listingType;
-      if (sellerType !== "all") params.sellerType = sellerType;
       if (status !== "all") params.status = status;
 
       console.log("📤 API Request params:", params);
@@ -203,28 +188,19 @@ export default function AdminProductManagement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     filtersSummary.q,
-    filtersSummary.listingType,
-    filtersSummary.sellerType,
     filtersSummary.status,
   ]);
 
   const resetFilters = () => {
     setQ("");
-    setListingType("all");
-    setSellerType("Designer");
     setStatus("all");
     setPage(1);
   };
 
-  const hasFilters =
-    q || listingType !== "all" || sellerType !== "all" || status !== "all";
+  const hasFilters = q || status !== "all";
 
   // Helper function to get display price
   const getDisplayPrice = (product) => {
-    if (product.listingType === "rent") {
-      return product.rentPrice || product.price;
-    }
-    // For sale items, use salePrice if on sale, otherwise regular price
     if (product.isOnSale && product.salePrice) {
       return product.salePrice;
     }
@@ -493,28 +469,7 @@ export default function AdminProductManagement() {
         </div>
       </div>
 
-      {/* Seller Type Tabs */}
-      <div className="flex p-1 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
-        {[
-          { id: "Designer", label: "Designer Products" },
-          { id: "Reseller", label: "Reseller Products" },
-          { id: "Admin", label: "Admin Products" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              setSellerType(tab.id);
-              setPage(1);
-            }}
-            className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all transform duration-200 ${sellerType === tab.id
-              ? "bg-white text-emerald-600 shadow-md scale-[1.02]"
-              : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {/* Seller Type Tabs Removed */}
 
       {/* Filters Section */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
@@ -537,25 +492,7 @@ export default function AdminProductManagement() {
             />
           </div>
 
-          {/* Listing Type Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Listing Type
-            </label>
-            <select
-              value={listingType}
-              onChange={(e) => setListingType(e.target.value)}
-              className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all bg-white"
-            >
-              <option value="all">All Types</option>
-              <option value="sale">Sale</option>
-              <option value="rent">Rent</option>
-            </select>
-          </div>
-
-          {/* Seller Type Filter */}
-
-          {/* Status Filter */}
+          {/* Filters section simplified */}          {/* Status Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Status
@@ -612,8 +549,6 @@ export default function AdminProductManagement() {
             <tr className="text-left">
               <th className="px-6 py-4 font-semibold text-gray-700">Image</th>
               <th className="px-6 py-4 font-semibold text-gray-700">Product</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Seller</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Type</th>
               <th className="px-6 py-4 font-semibold text-gray-700">Status</th>
               <th className="px-6 py-4 font-semibold text-gray-700">Price</th>
               <th className="px-6 py-4 font-semibold text-gray-700">Stock</th>
@@ -697,33 +632,6 @@ export default function AdminProductManagement() {
                         {p.description}
                       </p>
                     )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <span
-                        className={`inline-block px-2 py-1 rounded-lg text-xs font-semibold ${p.sellerType === "Designer"
-                          ? "bg-purple-100 text-purple-700"
-                          : "bg-orange-100 text-orange-700"
-                          }`}
-                      >
-                        {p.sellerType}
-                      </span>
-                      {p.sellerName && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          {p.sellerName}
-                        </p>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${p.listingType === "rent"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-green-100 text-green-700"
-                        }`}
-                    >
-                      {p.listingType === "rent" ? "For Rent" : "For Sale"}
-                    </span>
                   </td>
                   <td className="px-6 py-4">
                     <span
@@ -1021,21 +929,7 @@ export default function AdminProductManagement() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Seller Type *
-              </label>
-              <select
-                name="sellerType"
-                value={formData.sellerType}
-                onChange={handleFormChange}
-                className="w-full rounded-xl border-2 border-gray-200 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-white"
-              >
-                <option value="Admin">Admin</option>
-                <option value="Designer">Designer</option>
-                <option value="Reseller">Reseller</option>
-              </select>
-            </div>
+
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">

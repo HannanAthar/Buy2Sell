@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
+import Buy2SellChatbot from "./Buy2SellChatbot.jsx";
 import { motion, AnimatePresence } from "framer-motion"; // eslint-disable-line no-unused-vars
 import { useProducts } from "./ProductContext.jsx";
 import { useSlider } from "../contexts/SliderContext.jsx";
@@ -15,6 +16,8 @@ import { Suspense, lazy } from "react";
 import React from "react"; // Ensure React is imported for lazy
 import CardSkeleton from "./common/CardSkeleton.jsx";
 
+const ResellerCard = lazy(() => import("./ResellerCard.jsx"));
+const DesignerCard = lazy(() => import("./DesignerCard.jsx"));
 const StudioProductCard = lazy(() => import("./CustomYourStyle/ProductCard.jsx"));
 import HoverImageContainer from "./common/HoverImageContainer.jsx";
 import HoverWrapper from "./common/HoverWrapper.jsx";
@@ -245,6 +248,8 @@ const HomePage = () => {
   const sections = [
     { id: "hero-section", label: "Home" },
     { id: "discover-section", label: "Discover" },
+    { id: "featured-designers", label: "Designers" },
+    { id: "featured-resellers", label: "Resellers" },
     { id: "featured-custom", label: "Custom" },
     { id: "trust-section", label: "Why Us" },
     { id: "footer-section", label: "Contact" },
@@ -252,6 +257,8 @@ const HomePage = () => {
 
   const heroRef = useRef(null);
   const discoverRef = useRef(null);
+  const featuredRef = useRef(null);
+  const featuredResellersRef = useRef(null);
   const customRef = useRef(null);
   const trustRef = useRef(null);
   const footerRef = useRef(null);
@@ -287,6 +294,8 @@ const HomePage = () => {
     const SECTIONS = [
       { ref: heroRef, index: 0 },
       { ref: discoverRef, index: 1 },
+      { ref: featuredRef, index: 2 },
+      { ref: featuredResellersRef, index: 3 },
       { ref: customRef, index: 4 },
       { ref: trustRef, index: 5 },
       { ref: footerRef, index: 6 },
@@ -483,6 +492,121 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* DESIGNERS */}
+      <section
+        id="featured-designers"
+        ref={featuredRef}
+        className="py-10 bg-white"
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="mb-8 flex flex-col items-center justify-center text-center space-y-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Explore Our Designers
+            </h2>
+            <Link
+              to="/designers"
+              className="text-[var(--dark-green)] hover:text-[var(--primary-green)] font-semibold"
+            >
+              View all ΓåÆ
+            </Link>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {featuredDesigners.map((p) => (
+              <motion.div
+                key={p.id || p._id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                <Suspense fallback={<CardSkeleton />}>
+                  <DesignerCard
+                    product={p}
+                    isLiked={isInWishlist(p.id || p._id)}
+                    onToggleWishlist={toggleWishlist}
+                  />
+                </Suspense>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* RESELLERS */}
+      <section
+        id="featured-resellers"
+        ref={featuredResellersRef}
+        className="py-10 bg-white"
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="mb-8 flex flex-col items-center justify-center text-center space-y-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Explore Our Resellers
+            </h2>
+            <Link
+              to="/reseller"
+              className="text-[var(--dark-green)] hover:text-[var(--primary-green)] font-semibold"
+            >
+              View all ΓåÆ
+            </Link>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {(Array.isArray(resellerProducts)
+              ? resellerProducts.slice(0, 4)
+              : []
+            ).map((p) => (
+              <motion.div
+                key={p.id || p._id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                <Suspense fallback={<CardSkeleton />}>
+                  <ResellerCard
+                    product={p}
+                    isLiked={isInWishlist(p.id || p._id)}
+                    onToggleWishlist={toggleWishlist}
+                  />
+                </Suspense>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* CUSTOM */}
       <section id="featured-custom" ref={customRef} className="py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -606,6 +730,7 @@ const HomePage = () => {
       <br />
 
       <div id="footer-section" ref={footerRef}>
+        <Buy2SellChatbot />
         <Footer />
       </div>
     </div>

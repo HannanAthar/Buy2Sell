@@ -1,7 +1,5 @@
 // controllers/escrowController.js
 import Order from "../models/Order.js";
-import Designer from "../models/Designer.js";
-import Reseller from "../models/Reseller.js";
 import {
   transferToConnectedAccount,
   refundPayment,

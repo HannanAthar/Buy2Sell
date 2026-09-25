@@ -1,6 +1,4 @@
 import User from '../models/User.js';
-import Reseller from '../models/Reseller.js';
-import Designer from '../models/Designer.js';
 import bcrypt from 'bcrypt';
 import { validatePasswordStrength, sanitizeString, sanitizeEmail } from '../utils/sanitize.js';
 
@@ -64,15 +62,11 @@ export const registerUser = async (req, res, next) => {
     const nameRegex = new RegExp(`^${escapedName}$`, 'i'); // Case-insensitive exact match
 
     const existingUser = await User.findOne({ $or: [{ email: trimmedEmail }, { phone: trimmedPhone }, { fullName: nameRegex }] });
-    const existingDesigner = await Designer.findOne({ $or: [{ email: trimmedEmail }, { fullName: nameRegex }] });
-    const existingReseller = await Reseller.findOne({ $or: [{ email: trimmedEmail }, { fullName: nameRegex }] });
 
-    if (existingUser || existingDesigner || existingReseller) {
+    if (existingUser) {
       // Check Name
       const nameTaken =
-        (existingUser && existingUser.fullName.toLowerCase() === trimmedFullName.toLowerCase()) ||
-        (existingDesigner && existingDesigner.fullName.toLowerCase() === trimmedFullName.toLowerCase()) ||
-        (existingReseller && existingReseller.fullName.toLowerCase() === trimmedFullName.toLowerCase());
+        (existingUser && existingUser.fullName.toLowerCase() === trimmedFullName.toLowerCase());
 
       if (nameTaken) {
         return res.status(400).json({ error: 'This name is already taken. Please try a different name.' });

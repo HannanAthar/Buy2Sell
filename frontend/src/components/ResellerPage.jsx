@@ -10,7 +10,7 @@ import { useProducts } from "./ProductContext.jsx";
 import { useSlider } from "../contexts/SliderContext.jsx";
 import { readStorage, writeStorage } from "../utils/storage";
 import ResellerCard from "./ResellerCard.jsx";
-import Buy2SellChatbot from "./Buy2SellChatbot.jsx";
+
 import HoverWrapper from "./common/HoverWrapper.jsx";
 
 /** -------------------- Scroll Indicator (same style as DesignerPage) -------------------- */
@@ -738,7 +738,7 @@ export default function ResellerPage() {
           </div>
         </HoverWrapper>
       </section>
-      <Buy2SellChatbot />
+
       <br />
       <Footer />
       <style jsx>{`

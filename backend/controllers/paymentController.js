@@ -7,8 +7,6 @@ import Stripe from "stripe";
 import Order from "../models/Order.js";
 import PendingOrder from "../models/PendingOrder.js";
 import Product from "../models/Product.js";
-import Designer from "../models/Designer.js";
-import Reseller from "../models/Reseller.js";
 import {
   sendEmail,
   buyerTemplates,

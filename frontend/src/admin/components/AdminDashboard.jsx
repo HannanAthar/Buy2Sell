@@ -77,8 +77,7 @@ export default function AdminDashboard() {
 
   const cards = [
     { label: "Buyers", value: stats?.buyers || 0, icon: Users, to: "/admin/users", gradient: "from-green-500 to-emerald-600", lightBg: "from-green-50 to-emerald-50" },
-    { label: "Designers", value: stats?.designers || 0, icon: Shirt, to: "/admin/designers", gradient: "from-emerald-500 to-teal-600", lightBg: "from-emerald-50 to-teal-50" },
-    { label: "Resellers", value: stats?.resellers || 0, icon: Briefcase, to: "/admin/resellers", gradient: "from-teal-500 to-cyan-600", lightBg: "from-teal-50 to-cyan-50" },
+
     { label: "Products", value: stats?.products || 0, icon: Package, to: "/admin/products", gradient: "from-green-600 to-emerald-700", lightBg: "from-green-50 to-emerald-100" },
     { label: "Orders", value: stats?.orders || 0, icon: Package, to: "/admin/orders", gradient: "from-emerald-600 to-green-700", lightBg: "from-emerald-50 to-green-100" },
   ];

@@ -283,27 +283,9 @@ const AdminReviewsModal = ({
                           "Unknown User"}
                       </span>
                       {/* Role Badge */}
-                      {(review.reviewerRole || review.user?.role) && (
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            (review.reviewerRole || review.user?.role) ===
-                            "designer"
-                              ? "bg-blue-100 text-blue-700"
-                              : (review.reviewerRole || review.user?.role) ===
-                                "reseller"
-                              ? "bg-purple-100 text-purple-700"
-                              : "bg-green-100 text-green-700"
-                          }`}
-                        >
-                          {(review.reviewerRole || review.user?.role) ===
-                          "designer"
-                            ? "Designer"
-                            : (review.reviewerRole || review.user?.role) ===
-                              "reseller"
-                            ? "Reseller"
-                            : "Buyer"}
-                        </span>
-                      )}
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                        Buyer
+                      </span>
                     </div>
                   </div>
                 </div>

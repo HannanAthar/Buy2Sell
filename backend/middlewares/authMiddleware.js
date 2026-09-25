@@ -1,8 +1,6 @@
 // backend/middlewares/authMiddleware.js
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import Designer from '../models/Designer.js';
-import Reseller from '../models/Reseller.js';
 import Admin from '../models/Admin.js';
 import { checkSessionTimeout, updateUserActivity } from './sessionTimeout.js';
 
@@ -71,12 +69,6 @@ export const protect = (roles = []) => {
               case 'buyer':
                 foundUser = await User.findById(decoded.id).select('-password');
                 break;
-              case 'designer':
-                foundUser = await Designer.findById(decoded.id).select('-password');
-                break;
-              case 'reseller':
-                foundUser = await Reseller.findById(decoded.id).select('-password');
-                break;
               case 'admin':
                 foundUser = await Admin.findById(decoded.id).select('-password');
                 break;
@@ -135,12 +127,6 @@ export const optionalAuth = async (req, res, next) => {
     switch (decoded.role) {
       case 'buyer':
         user = await User.findById(decoded.id).select('-password');
-        break;
-      case 'designer':
-        user = await Designer.findById(decoded.id).select('-password');
-        break;
-      case 'reseller':
-        user = await Reseller.findById(decoded.id).select('-password');
         break;
       case 'admin':
         user = await Admin.findById(decoded.id).select('-password');
