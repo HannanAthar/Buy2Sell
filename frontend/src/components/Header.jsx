@@ -217,7 +217,7 @@ const Header = () => {
 
             {/* Custom Clothes (Primary Action) */}
             <Link
-              to="/designer-tool"
+              to="/custom-products"
               className="px-2 flex items-center justify-center text-gray-700 hover:text-green-500 font-medium relative group transition-all nav-link-animated"
             >
               <Shirt className="w-5 h-5 mr-1.5 text-green-600" />
@@ -262,7 +262,7 @@ const Header = () => {
                         q.includes("custom shirt") ||
                         q.includes("custom shirts")
                       )
-                        window.location.href = "/designer-tool";
+                        window.location.href = "/custom-products";
                       else
                         window.location.href = `/search?q=${encodeURIComponent(
                           q
@@ -434,7 +434,7 @@ const Header = () => {
                       q.includes("custom shirt") ||
                       q.includes("custom shirts")
                     )
-                      window.location.href = "/designer-tool";
+                      window.location.href = "/custom-products";
                     else
                       window.location.href = `/search?q=${encodeURIComponent(
                         q
@@ -496,7 +496,7 @@ const Header = () => {
 
             {/* Customize Clothes */}
             <a
-              href="/designer-tool"
+              href="/custom-products"
               className="px-3 py-3 rounded-md hover:bg-green-50 flex items-center gap-2 text-base font-medium bg-green-50/50 text-green-700"
             >
               <Shirt className="w-5 h-5" />

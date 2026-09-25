@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
+import { motion } from "framer-motion";
 import { Palette, Sparkles } from "lucide-react";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -139,6 +139,21 @@ export default function CustomProductsGallery() {
             Browse our collection of unique custom product templates or create
             your own masterpiece
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="pointer-events-auto mt-4"
+          >
+            <button
+              onClick={() => navigate("/custom-shirt-designer")}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[var(--dark-green)] font-bold text-lg shadow-xl transition-all duration-300 hover:bg-emerald-50 hover:scale-105 active:scale-95"
+            >
+              <Sparkles className="w-5 h-5 text-emerald-600" />
+              Start Designing
+            </button>
+          </motion.div>
         </HoverWrapper>
       </section>
 

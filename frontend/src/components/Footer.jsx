@@ -163,7 +163,7 @@ const Footer = () => {
               <ul className="space-y-4">
                 <li>
                   <Link
-                    to="/designer-tool"
+                    to="/custom-products"
                     className="text-gray-400 hover:text-emerald-400 transition-all duration-200 flex items-center group text-sm font-medium"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0"></span>
