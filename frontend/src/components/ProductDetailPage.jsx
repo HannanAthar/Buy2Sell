@@ -19,7 +19,6 @@ import RateProductModal from "./RateProductModal";
 import ReviewsList from "./ReviewsList";
 import CommentsToggle from "./CommentsToggle";
 import ReviewsModal from "./ReviewsModal";
-import RentalBadge from "./RentalBadge";
 
 import CustomStyleProductCard from "./CustomYourStyle/ProductCard";
 import CloudinaryImage from "./common/CloudinaryImage";
@@ -898,8 +897,7 @@ function ProductDetailPage() {
                     />
                   ) : null}
                 </AnimatePresence>
-                {/* RENTAL BADGE for Detail Page */}
-                 <RentalBadge product={product} />
+
                 {/* Fallback space filler if needed or handled by absolute positioning */}
                 {images.length === 0 && (
                   <div className="w-full h-[560px] flex items-center justify-center text-gray-400">

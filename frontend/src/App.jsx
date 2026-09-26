@@ -53,7 +53,7 @@ const ContactUs = lazy(() => import("./components/ContactUs.jsx"));
 const LearnMore = lazy(() => import("./components/LearnMore.jsx"));
 const CartPage = lazy(() => import("./components/CartPage.jsx"));
 const WishlistPage = lazy(() => import("./components/WishlistPage.jsx"));
-const ClothesPage = lazy(() => import("./components/ClothesPage.jsx"));
+
 const CheckoutPage = lazy(() => import("./components/CheckoutPage.jsx"));
 const CustomShirtDesigner = lazy(() =>
   import("./components/CustomShirtDesigner.jsx")
@@ -65,7 +65,7 @@ const CustomProductsGallery = lazy(() =>
 const SubmissionSuccess = lazy(() =>
   import("./components/SubmissionSuccess.jsx")
 );
-const RentForm = lazy(() => import("./components/RentForm.jsx"));
+
 const ProductDetailPage = lazy(() =>
   import("./components/ProductDetailPage.jsx")
 );
@@ -115,7 +115,7 @@ const AnimatedRoutes = () => {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/clothes" element={<ClothesPage />} />
+
         <Route path="/checkout" element={<CheckoutPage />} />
 
 
@@ -127,7 +127,7 @@ const AnimatedRoutes = () => {
           element={<CustomShirtDesigner />}
         />
         <Route path="/custom-products" element={<CustomProductsGallery />} />
-        <Route path="/rent-form" element={<RentForm />} />
+
 
         <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
 
