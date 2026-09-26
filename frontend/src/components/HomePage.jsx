@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-import { motion, AnimatePresence } from "framer-motion"; // eslint-disable-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "./ProductContext.jsx";
 import { useSlider } from "../contexts/SliderContext.jsx";
 import { Link } from "react-router-dom";
@@ -21,29 +21,15 @@ import HoverWrapper from "./common/HoverWrapper.jsx";
 import CloudinaryImage from "./common/CloudinaryImage.jsx";
 import { getOptimizedImageUrl } from "../utils/cloudinaryUtils";
 
-const throttleFn = (func, limit) => {
-  let inThrottle;
-  return function () {
-    const args = arguments;
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
-
+// --- ScrollIndicator (Homepage only) ---
 const ScrollIndicator = ({ sections, activeSection }) => {
   const scrollToSection = (sectionId) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      const offsetTop = el.offsetTop - 100;
-      window.scrollTo({ top: offsetTop, behavior: "smooth" });
-    }
+    const element = document.getElementById(sectionId);
+    if (element)
+      window.scrollTo({ top: element.offsetTop - 100, behavior: "smooth" });
   };
   return (
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col space-y-4">
+    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 hidden lg:flex flex-col space-y-4">
       {sections.map((section, index) => (
         <motion.div
           key={section.id}
@@ -53,7 +39,7 @@ const ScrollIndicator = ({ sections, activeSection }) => {
           transition={{ duration: 0.3 }}
         >
           <div
-            className={`absolute right-8 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 whitespace-nowrap pointer-events-none border ${
+            className={`absolute right-8 top-1/2 transform -translate-y-1/2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 whitespace-nowrap pointer-events-none border ${
               activeSection === index
                 ? "bg-gradient-to-r from-[var(--primary-green)] to-[var(--dark-green)] text-white opacity-100 translate-x-0 shadow-xl border-[var(--primary-green)]"
                 : "bg-gray-800 text-white opacity-0 translate-x-6 group-hover:opacity-100 group-hover:translate-x-0 border-gray-600"
@@ -65,14 +51,12 @@ const ScrollIndicator = ({ sections, activeSection }) => {
             className={`w-4 h-4 rounded-full border-2 transition-all duration-300 relative ${
               activeSection === index
                 ? "bg-gradient-to-r from-[var(--primary-green)] to-[var(--dark-green)] border-[var(--primary-green)] shadow-lg shadow-[var(--primary-green)]/40 scale-110"
-                : "bg-gray-100/60 border-gray-400/60 hover:border-[var(--primary-green)]/70 hover:shadow-md hover:bg-[var(--emerald-50)]/80"
+                : "bg-gray-100/60 border-gray-400/60 hover:border-[var(--primary-green)]/70 hover:shadow-md"
             }`}
           >
             <div
               className={`absolute inset-1 rounded-full transition-all duration-300 ${
-                activeSection === index
-                  ? "bg-white opacity-40"
-                  : "bg-gray-300/40 opacity-60"
+                activeSection === index ? "bg-white opacity-40" : "bg-gray-300/40 opacity-60"
               }`}
             />
           </div>
@@ -81,6 +65,8 @@ const ScrollIndicator = ({ sections, activeSection }) => {
     </div>
   );
 };
+
+
 
 // HubCard component for touch-friendly flip animation
 const HubCard = ({ hub }) => {
@@ -217,38 +203,30 @@ const HomePage = () => {
 
   const hubs = [
     {
-      name: "Designers",
-      image: "/12.webp",
-      hoverImage: "/3.webp",
-      link: "/designers",
-      description: "Connect and discover exclusive collections",
-    },
-    {
-      name: "Resellers",
-      image: "/20.webp",
-      hoverImage: "/22.jpg",
-      link: "/reseller",
-      description: "Explore authenticated pre-loved luxury items",
-    },
-    {
-      name: "Custom Clothes",
+      name: "Customize Clothes",
       image: "/33.jpg",
       hoverImage: "/34.webp",
-      link: "/designer-tool",
-      description: "Design and personalize your own clothes",
+      link: "/custom-products",
+      description: "Design and personalize your own custom clothes",
+    },
+    {
+      name: "Design Inspiration",
+      image: "/12.webp",
+      hoverImage: "/3.webp",
+      link: "/gallery",
+      description: "Browse aesthetic, pre-made designs for inspiration",
+    },
+    {
+      name: "Our Process",
+      image: "/20.webp",
+      hoverImage: "/22.jpg",
+      link: "/how-it-works",
+      description: "See our beautifully animated step-by-step custom clothing process",
     },
   ];
 
   // Use global slider context
   const { images, currentImage } = useSlider();
-  const [activeSection, setActiveSection] = useState(0);
-  const sections = [
-    { id: "hero-section", label: "Home" },
-    { id: "discover-section", label: "Discover" },
-    { id: "featured-custom", label: "Custom" },
-    { id: "trust-section", label: "Why Us" },
-    { id: "footer-section", label: "Contact" },
-  ];
 
   const heroRef = useRef(null);
   const discoverRef = useRef(null);
@@ -257,6 +235,15 @@ const HomePage = () => {
   const footerRef = useRef(null);
 
   const [trustVisible, setTrustVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+
+  const sections = [
+    { id: "hero-section",      label: "Home",          ref: heroRef },
+    { id: "discover-section",  label: "Discover",       ref: discoverRef },
+    { id: "featured-custom",   label: "Custom Styles",  ref: customRef },
+    { id: "trust-section",     label: "Why Us",         ref: trustRef },
+    { id: "footer-section",    label: "Footer",         ref: footerRef },
+  ];
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([e]) => setTrustVisible(e.isIntersecting),
@@ -284,34 +271,29 @@ const HomePage = () => {
   // Timer now managed by global SliderContext - no local timer needed
 
   useEffect(() => {
-    const SECTIONS = [
-      { ref: heroRef, index: 0 },
-      { ref: discoverRef, index: 1 },
-      { ref: customRef, index: 4 },
-      { ref: trustRef, index: 5 },
-      { ref: footerRef, index: 6 },
-    ];
-    const pickActive = throttleFn(() => {
-      const mid = window.innerHeight / 2;
-      let active = 0;
-      for (let i = 0; i < SECTIONS.length; i++) {
-        const el = SECTIONS[i].ref.current;
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= mid && rect.bottom >= mid) {
-          active = SECTIONS[i].index;
-          break;
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section.ref && section.ref.current) {
+          const sectionTop = section.ref.current.offsetTop;
+          const sectionHeight = section.ref.current.offsetHeight;
+          const sectionBottom = sectionTop + sectionHeight;
+
+          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+            setActiveSection(i);
+            break;
+          }
         }
       }
-      setActiveSection(active);
-    }, 100);
-    window.addEventListener("scroll", pickActive, { passive: true });
-    window.addEventListener("resize", pickActive);
-    pickActive();
-    return () => {
-      window.removeEventListener("scroll", pickActive);
-      window.removeEventListener("resize", pickActive);
     };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const scrollToSection = (id) => {
@@ -328,6 +310,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-white relative overflow-x-hidden">
       <Header />
 
+      {/* Scroll Indicator – Homepage only */}
       <ScrollIndicator sections={sections} activeSection={activeSection} />
 
       <section
@@ -387,9 +370,7 @@ const HomePage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-base sm:text-lg lg:text-xl text-white mb-8 leading-relaxed max-w-3xl mx-auto"
             >
-              Discover A World Of Luxury Fashion. Connect With Pre-Loved Market
-              and Top Designers And Explore Unique Styles That Elevate Your
-              Wardrobe.
+              Create Your Own Style. Discover Premium Custom Apparel, Wear Your Imagination, And Embody The Ultimate Modern Aesthetic Vibe.
             </motion.p>
 
             <motion.button
@@ -494,7 +475,7 @@ const HomePage = () => {
               to="/custom-products"
               className="text-[var(--dark-green)] hover:text-[var(--primary-green)] font-semibold"
             >
-              View all ΓåÆ
+              View All
             </Link>
           </div>
 

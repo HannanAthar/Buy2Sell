@@ -36,7 +36,7 @@ const Login = () => {
     email: "",
     password: "",
     showPassword: false,
-    userType: "designer",
+    userType: "user",
     error: "",
     loading: false,
   });
@@ -408,23 +408,7 @@ const Login = () => {
                   </div>
                 )}
 
-                {/* Role selector */}
-                <div className="grid grid-cols-3 gap-2 mb-6">
-                  {["designer", "reseller", "user"].map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => handleLoginChange("userType", r)}
-                      className={`py-2 rounded-lg border text-sm font-semibold transition ${
-                        loginData.userType === r
-                          ? "bg-emerald-600 text-white border-emerald-600"
-                          : "bg-gray-100 text-gray-700 border-gray-200 hover:border-emerald-300"
-                      }`}
-                    >
-                      {r.charAt(0).toUpperCase() + r.slice(1)}
-                    </button>
-                  ))}
-                </div>
+
 
                 <div className="space-y-4">
                   <div className="input-box group">

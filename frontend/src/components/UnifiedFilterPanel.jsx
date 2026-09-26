@@ -30,23 +30,13 @@ function UnifiedFilterPanelBase({
 
   const clearAll = () =>
     onFiltersChange({
-      categories: [],
       priceMin: priceRange.min,
       priceMax: priceRange.max,
-      condition: "",
-      onSale: false,
-      listing: "any",
-      gender: "", // CHANGED from [] to ""
     });
 
   const hasActive =
-    (filters.categories?.length || 0) > 0 ||
-    !!filters.gender || // CHANGED
-    !!filters.onSale ||
-    filters.listing !== "any" ||
     filters.priceMin !== priceRange.min ||
-    filters.priceMax !== priceRange.max ||
-    !!filters.condition;
+    filters.priceMax !== priceRange.max;
 
   return (
     <div className="relative" ref={panelRef}>
@@ -62,15 +52,10 @@ function UnifiedFilterPanelBase({
         Filters
         {hasActive && (
           <span className="bg-white text-emerald-600 text-xs px-2 py-0.5 rounded-full font-bold">
-            {(filters.categories?.length || 0) +
-              (filters.gender ? 1 : 0) + // CHANGED
-              (filters.onSale ? 1 : 0) +
-              (filters.listing !== "any" ? 1 : 0) +
-              (filters.priceMin !== priceRange.min ||
+            {filters.priceMin !== priceRange.min ||
               filters.priceMax !== priceRange.max
                 ? 1
-                : 0) +
-              (filters.condition ? 1 : 0)}
+                : 0}
           </span>
         )}
         <ChevronDown
@@ -100,61 +85,6 @@ function UnifiedFilterPanelBase({
                     <RotateCcw className="h-4 w-4" /> Clear All
                   </button>
                 )}
-              </div>
-
-              {/* Gender Filter - SINGLE SELECT */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Gender
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {["Men", "Women", "Unisex"].map((g) => {
-                    const isActive = filters.gender === g; // Single string selection check
-                    return (
-                      <button
-                        key={g}
-                        onClick={() => {
-                          // Toggle: if clicked same, clear it; otherwise set new
-                          const next = isActive ? "" : g;
-                          handleChange("gender", next);
-                        }}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all flex items-center gap-2
-                        ${
-                          isActive
-                            ? "bg-emerald-600 text-white border-emerald-600"
-                            : "bg-white text-gray-700 border-gray-300 hover:border-emerald-300"
-                        }`}
-                      >
-                         <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-white' : 'bg-gray-300'}`}></span>
-                         {g}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Listing Type (Designer) */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700">
-                  Listing Type
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {["any", "sale", "rent"].map((opt) => (
-                    <button
-                      key={opt}
-                      onClick={() => handleChange("listing", opt)}
-                      className={`h-10 px-4 flex items-center justify-center min-w-[80px] rounded-lg border text-sm font-medium transition-all ${
-                        filters.listing === opt
-                          ? "border-emerald-600 text-emerald-700 bg-emerald-50 ring-1 ring-emerald-600"
-                          : "border-gray-300 hover:border-emerald-300 hover:text-emerald-700"
-                      }`}
-                    >
-                      {opt === "any"
-                        ? "Any"
-                        : opt.charAt(0).toUpperCase() + opt.slice(1)}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               {/* Price Range */}
@@ -191,78 +121,6 @@ function UnifiedFilterPanelBase({
                 </div>
               </div>
 
-              {/* Condition (Reseller) */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Condition Rating
-                </label>
-                <select
-                  value={filters.condition}
-                  onChange={(e) => handleChange("condition", e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-gray-700"
-                >
-                  <option value="">Any Condition</option>
-                  {Array.from({ length: 10 }, (_, i) => 10 - i).map((val) => (
-                    <option key={val} value={val}>
-                      {val}/10
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* On Sale */}
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={!!filters.onSale}
-                    onChange={(e) => handleChange("onSale", e.target.checked)}
-                    className="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                    On Sale Only
-                  </span>
-                </label>
-              </div>
-
-              {/* Categories */}
-              {categories.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Categories
-                  </label>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {categories.map((c) => (
-                      <label
-                        key={c.name}
-                        className="flex items-center space-x-3 cursor-pointer group"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={
-                            filters.categories?.includes(c.name) || false
-                          }
-                          onChange={() =>
-                            onFiltersChange({
-                              ...filters,
-                              categories: filters.categories?.includes(c.name)
-                                ? filters.categories.filter((x) => x !== c.name)
-                                : [...(filters.categories || []), c.name],
-                            })
-                          }
-                          className="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-700 group-hover:text-gray-900 flex-1 capitalize">
-                          {c.name}
-                        </span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                          {c.count}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </motion.div>
         )}
@@ -296,23 +154,7 @@ export const UnifiedFilterPanel = withOptimization(UnifiedFilterPanelBase);
 
 const ActiveFiltersBase = ({ filters, onRemove, priceRange }) => {
   const chips = [];
-  (filters.categories || []).forEach((c) =>
-    chips.push({ type: "categories", value: c, label: `Category: ${c}` })
-  );
   
-  // CHANGED: Handle single string gender
-  if (filters.gender) {
-    chips.push({ type: "gender", value: filters.gender, label: `Gender: ${filters.gender}` });
-  }
-
-  if (filters.onSale)
-    chips.push({ type: "onSale", value: true, label: "On Sale" });
-  if (filters.listing !== "any")
-    chips.push({
-      type: "listing",
-      value: filters.listing,
-      label: `Listing: ${filters.listing}`,
-    });
   if (
     filters.priceMin !== priceRange.min ||
     filters.priceMax !== priceRange.max
@@ -321,13 +163,6 @@ const ActiveFiltersBase = ({ filters, onRemove, priceRange }) => {
       type: "price",
       value: "price",
       label: `Price: Rs ${filters.priceMin?.toLocaleString()} - Rs ${filters.priceMax?.toLocaleString()}`,
-    });
-  }
-  if (filters.condition) {
-    chips.push({
-      type: "condition",
-      value: "condition",
-      label: `Condition: ${filters.condition}/10`,
     });
   }
 

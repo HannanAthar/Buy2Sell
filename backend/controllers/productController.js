@@ -152,9 +152,8 @@ export const getAllProducts = async (req, res, next) => {
   try {
     const { category, minPrice, maxPrice, search, page = 1, limit = 500, sellerType, gender } = req.query;
 
-    // PUBLIC VIEW: Only show active AND approved products
-    // Products with zero stock are auto-hidden (isActive = false)
-    const filter = { isActive: true, status: 'approved' };
+    // PUBLIC VIEW: show all products (admin-managed platform)
+    const filter = {};
 
     if (category) {
       filter.category = category.toLowerCase();
@@ -180,7 +179,11 @@ export const getAllProducts = async (req, res, next) => {
     }
 
     if (search) {
-      filter.$text = { $search: search };
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { category: { $regex: search, $options: 'i' } }
+      ];
     }
 
     const skip = (Number(page) - 1) * Number(limit);
@@ -438,8 +441,6 @@ export const adminGetAllProducts = async (req, res, next) => {
     const stats = {
       totalProducts: await Product.countDocuments(),
       activeProducts: await Product.countDocuments({ isActive: true }),
-      designerProducts: await Product.countDocuments({ sellerType: "Designer" }),
-      resellerProducts: await Product.countDocuments({ sellerType: "Reseller" }),
       pendingProducts: await Product.countDocuments({ status: "pending" }),
     };
 

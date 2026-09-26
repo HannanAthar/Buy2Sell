@@ -5,78 +5,78 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-// Curated gallery items
+// Curated gallery items (Korean/Anime Aesthetic Vibe)
 const galleryItems = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=800",
-    tag: "Oversized Tee",
+    src: "https://images.unsplash.com/photo-1549584483-e028b1464b63?q=80&w=800",
+    tag: "Anime Stitched Tee",
     category: "T-Shirt",
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800",
-    tag: "Minimalist Logo Tee",
+    src: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800",
+    tag: "Korean Streetwear",
     category: "T-Shirt",
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=800",
-    tag: "Custom Hoodie",
+    src: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800",
+    tag: "Oversized Street Hoodie",
     category: "Hoodie",
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1515680322033-4d61c5f36082?q=80&w=800",
-    tag: "Graphic Sweatshirt",
-    category: "Sweatshirt",
+    src: "https://images.unsplash.com/photo-1614975058782-b7e17424422e?q=80&w=800",
+    tag: "Graphic Anime Hoodie",
+    category: "Hoodie",
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=800",
-    tag: "Polo Design",
+    src: "https://images.unsplash.com/photo-1553531384-cc64ac80f931?q=80&w=800",
+    tag: "Printed Aesthetic Polo",
     category: "Polo",
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800",
-    tag: "Classic White Tee",
+    src: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800",
+    tag: "Techwear T-Shirt",
     category: "T-Shirt",
   },
   {
     id: 7,
-    src: "https://images.unsplash.com/photo-1591195853828-11db59a44f43?q=80&w=800",
-    tag: "Embroidered Hoodie",
-    category: "Hoodie",
+    src: "https://images.unsplash.com/photo-1517551061971-ce4a64dcf2e8?q=80&w=800",
+    tag: "Subtle Korean Sweatshirt",
+    category: "Sweatshirt",
   },
   {
     id: 8,
-    src: "https://images.unsplash.com/photo-1617196034183-421b4040ed20?q=80&w=800",
-    tag: "Text Print Tee",
+    src: "https://images.unsplash.com/photo-1520975954732-57dd06d64195?q=80&w=800",
+    tag: "Street Fashion Tee",
     category: "T-Shirt",
   },
   {
     id: 9,
-    src: "https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800",
-    tag: "Premium Zip Hoodie",
-    category: "Hoodie",
-  },
-  {
-    id: 10,
-    src: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800",
-    tag: "Washed Sweatshirt",
-    category: "Sweatshirt",
-  },
-  {
-    id: 11,
-    src: "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?q=80&w=800",
-    tag: "Branded Polo",
+    src: "https://images.unsplash.com/photo-1522083165195-3424ed129620?q=80&w=800",
+    tag: "K-Pop Inspired Polo",
     category: "Polo",
   },
   {
+    id: 10,
+    src: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800",
+    tag: "Pastel Color Hoodie",
+    category: "Hoodie",
+  },
+  {
+    id: 11,
+    src: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800",
+    tag: "Vintage Oversized Print",
+    category: "Sweatshirt",
+  },
+  {
     id: 12,
-    src: "https://images.unsplash.com/photo-1598964050892-8ae7148c3e73?q=80&w=800",
-    tag: "All-Over Print Tee",
+    src: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=800",
+    tag: "Minimalist Cut T-Shirt",
     category: "T-Shirt",
   },
 ];

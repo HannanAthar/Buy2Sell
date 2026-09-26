@@ -146,13 +146,15 @@ export default function CustomProductsGallery() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="pointer-events-auto mt-4"
           >
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/custom-shirt-designer")}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[var(--dark-green)] font-bold text-lg shadow-xl transition-all duration-300 hover:bg-emerald-50 hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[var(--dark-green)] font-bold text-lg shadow-lg transition-colors border border-gray-100"
             >
               <Sparkles className="w-5 h-5 text-emerald-600" />
               Start Designing
-            </button>
+            </motion.button>
           </motion.div>
         </HoverWrapper>
       </section>
@@ -258,13 +260,15 @@ export default function CustomProductsGallery() {
                   Use our powerful design tool to create unique custom products
                   with your own text, images, and creativity
                 </p>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(0,0,0,0.3)" }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => navigate("/custom-shirt-designer")}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-[var(--dark-green)] font-bold text-lg shadow-xl transition-all duration-300 ease-out hover:bg-[var(--emerald-50)] hover:shadow-2xl hover:scale-105 active:scale-[0.98] relative z-10 whitespace-nowrap"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-[var(--dark-green)] font-bold text-lg shadow-xl relative z-10 whitespace-nowrap"
                 >
                   <Sparkles className="w-6 h-6" />
                   Start Designing Now
-                </button>
+                </motion.button>
               </HoverWrapper>
             </motion.div>
           </>

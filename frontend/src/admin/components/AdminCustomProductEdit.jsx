@@ -50,10 +50,10 @@ export default function AdminCustomProductEdit() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // Use the standard product endpoint (works for admin too)
-        const { data } = await api.get(`/products/${id}`);
-        const product = data.product;
-
+        const { data } = await api.get(`/admin/custom-products/${id}`);
+        // If it was a custom product, it's possible it wasn't returned, fallback structure
+        const product = data.product || data;
+        
         setForm({
           title: product.name || product.title || "",
           description: product.description || "",
@@ -188,7 +188,7 @@ export default function AdminCustomProductEdit() {
       }
 
       // Use admin products endpoint for updates
-      await api.put(`/admin/products/${id}`, formData, {
+      await api.put(`/admin/custom-products/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

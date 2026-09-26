@@ -9,62 +9,7 @@ import { useDialog } from "../context/DialogContext";
 import HoverWrapper from "./common/HoverWrapper.jsx";
 import { hasXSS } from "../utils/security";
 
-// Scroll Indicator Component
-const ScrollIndicator = ({ sections, activeSection }) => {
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offsetTop = element.offsetTop - 100; // Account for header height
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  return (
-    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 hidden lg:flex flex-col space-y-4">
-      {sections.map((section, index) => (
-        <motion.div
-          key={section.id}
-          className="group relative cursor-pointer flex items-center"
-          onClick={() => scrollToSection(section.id)}
-          whileHover={{ scale: 1.15 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Label - Left side */}
-          <div
-            className={`absolute right-8 top-1/2 transform -translate-y-1/2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 whitespace-nowrap pointer-events-none border ${
-              activeSection === index
-                ? "bg-gradient-to-r from-[var(--primary-green)] to-[var(--dark-green)] text-white opacity-100 translate-x-0 shadow-xl border-[var(--primary-green)]"
-                : "bg-gray-800 text-white opacity-0 translate-x-6 group-hover:opacity-100 group-hover:translate-x-0 border-gray-600"
-            }`}
-          >
-            {section.label}
-          </div>
-
-          {/* Dot - Made smaller and less visible */}
-          <div
-            className={`w-4 h-4 rounded-full border-2 transition-all duration-300 relative ${
-              activeSection === index
-                ? "bg-gradient-to-r from-[var(--primary-green)] to-[var(--dark-green)] border-[var(--primary-green)] shadow-lg shadow-[var(--primary-green)]/40 scale-110"
-                : "bg-gray-100/60 border-gray-400/60 hover:border-[var(--primary-green)]/70 hover:shadow-md hover:bg-[var(--emerald-50)]/80"
-            }`}
-          >
-            {/* Inner dot for better visibility */}
-            <div
-              className={`absolute inset-1 rounded-full transition-all duration-300 ${
-                activeSection === index
-                  ? "bg-white opacity-40"
-                  : "bg-gray-300/40 opacity-60"
-              }`}
-            />
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
+// Removed ScrollIndicator from here
 const ContactUs = () => {
   const dialog = useDialog();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,21 +19,12 @@ const ContactUs = () => {
     message: "",
   });
 
-  // Scroll indicator state
+  // Scroll Progress only 
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState(0);
-
-  // Define sections for scroll indicator
-  const sections = [
-    { id: "hero-section", label: "Home" },
-    { id: "contact-section", label: "Contact" },
-    { id: "footer-section", label: "Footer" },
-  ];
 
   // Refs for each section
   const heroRef = useRef(null);
   const contactRef = useRef(null);
-  const chatbotRef = useRef(null);
   const footerRef = useRef(null);
 
   const handleChange = (e) => {
@@ -154,37 +90,7 @@ const ContactUs = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll indicator observer
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200; // Offset for header
-
-      const sections = [
-        { ref: heroRef, index: 0 },
-        { ref: contactRef, index: 1 },
-        { ref: footerRef, index: 2 },
-      ];
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section.ref.current) {
-          const sectionTop = section.ref.current.offsetTop;
-          const sectionHeight = section.ref.current.offsetHeight;
-          const sectionBottom = sectionTop + sectionHeight;
-
-          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-            setActiveSection(section.index);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [heroRef, contactRef, chatbotRef, footerRef]);
+  // Scroll Progress ends here
 
   return (
     <div className="min-h-screen bg-white relative overflow-x-hidden">
@@ -199,8 +105,7 @@ const ContactUs = () => {
         />
       </div>
 
-      {/* Scroll Indicator */}
-      <ScrollIndicator sections={sections} activeSection={activeSection} />
+
 
       {/* Hero Banner */}
       <section id="hero-section" ref={heroRef}>
